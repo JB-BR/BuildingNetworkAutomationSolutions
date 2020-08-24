@@ -28,14 +28,15 @@ docker network connect net1 ceos2
 docker network connect net2 ceos1
 docker network connect net2 ceos2
 
-# Start the containers
+### Start the containers
 docker start ceos1
 docker start ceos2
 
-# Wait a few minutes. If you use Docker Desktop you can check the logs:
+#### Wait a few minutes.
+If you use Docker Desktop you can check the logs:
 ![Docker Desktop](cEOS-Boot.png)
 
-# Log in the cEOS
+#### Log in the cEOS
 '''
 admin@docker_server$ docker exec -it ceos2 Cli
 localhost>enable
@@ -45,7 +46,7 @@ Et1               connected    1        full   unconf EbraTestPhyPort
 Et2               connected    1        full   unconf EbraTestPhyPort
 '''
 
-# Stop and remove the containers
+### Stop and remove the containers
 docker stop ceos1
 docker stop ceos2
 docker rm ceos1
