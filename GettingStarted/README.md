@@ -37,14 +37,14 @@ If you use Docker Desktop you can check the logs:
 ![Docker Desktop](cEOS-Boot.png)
 
 #### Log in the cEOS
-'''
+```
 admin@docker_server$ docker exec -it ceos2 Cli
 localhost>enable
 localhost#show interfaces status
 Port       Name   Status       Vlan     Duplex Speed  Type            Flags Encapsulation
 Et1               connected    1        full   unconf EbraTestPhyPort
 Et2               connected    1        full   unconf EbraTestPhyPort
-'''
+```
 
 ### Stop and remove the containers
 docker stop ceos1
