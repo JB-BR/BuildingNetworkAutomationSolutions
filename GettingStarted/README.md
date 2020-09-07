@@ -1,21 +1,26 @@
 # Lab with Vagrant
 We will use Hyper-V as provider.
 
-1. Install / Enable Hyper-V 
-2. Install Vagrant
-3. Clone this repository
-4. On your machine, create a local "vagrant" user for the SMB share and assign the user to the directory created at the step before
-5. Start a PowerShell console as "Administrator"
-7. Change the local directory :
+- Install / Enable Hyper-V 
+- Install Vagrant
+- Clone this repository
+- Go to https://www.arista.com/en/ and download cEOS-Lab
+- Verify the checksum and copy the cEOS tarfile to 
+```
+cp c:\yourpath\cEOS64-lab-4.24.2.1F.tar.xz c:\yourpath\BuildingNetworkAutomationSolutions\GettingStarted
+```
+- On your machine, create a local "vagrant" user for the SMB share and assign the user to the directory created at the step before
+- Start a PowerShell console as "Administrator"
+- Change the local directory :
 ```
 cd c:\yourpath\GettingStarted
 ```
-6. Start the machine
+- Start the machine
 ```
 vagrant up --provider=hyperv
 ```
 
-7. If prompted, chose the correct switch
+- If prompted, chose the correct switch
 ```
     default: Please choose a switch to attach to your Hyper-V instance.
     default: If none of these are appropriate, please open the Hyper-V manager
@@ -27,29 +32,29 @@ vagrant up --provider=hyperv
     default: What switch would you like to use? 1
 ```
 
-8. When prompted, enter the SMB credentials created before:
+- When prompted, enter the SMB credentials created before:
 ```
     default:
     default: Username (user[@domain]): vagrant
     default: Password (will be hidden):
 ```
 
-9. Log in the machine
+- Log in the machine
 ```
 vagrant ssh
 ```
 
-10. Stop the machine
+- Stop the machine
 ```
 vagrant suspend
 ```
 
-11. Restart the machine
+- Restart the machine
 ```
 vagrant resume
 ```
 
-12. Destroy the machine
+- Destroy the machine
 ```
 vagrant destroy
 ```
