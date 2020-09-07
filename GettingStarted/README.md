@@ -2,7 +2,7 @@
 We will use Hyper-V as provider.
 
 1. Install / Enable Hyper-V 
-2. Install / Enable Vagrant
+2. Install Vagrant
 3. Clone this repository
 4. On your machine, create a local "vagrant" user for the SMB share and assign the user to the directory created at the step before
 5. Start a PowerShell console as "Administrator"
