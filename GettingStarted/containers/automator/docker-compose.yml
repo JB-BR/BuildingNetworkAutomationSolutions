@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  automator:
+    hostname: "automator"
+    image: "automator:latest"
+    networks:
+      default:
+    tty: true
+
+networks:
+  default:
+    external:
+      name: oob-automation

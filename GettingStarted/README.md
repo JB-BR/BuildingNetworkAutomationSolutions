@@ -9,6 +9,7 @@ We will use Hyper-V as provider.
 ```
 cp c:\yourpath\cEOS64-lab-4.24.2.1F.tar.xz c:\yourpath\BuildingNetworkAutomationSolutions\GettingStarted
 ```
+- Edit the *aristaceos* variable in the Vagrantfile to match your cEOS version
 - On your machine, create a local "vagrant" user for the SMB share and assign the user to the directory created at the step before
 - Start a PowerShell console as "Administrator"
 - Change the local directory :
@@ -43,6 +44,19 @@ vagrant up --provider=hyperv
 ```
 vagrant ssh
 ```
+
+- Docker scenarios are found in /vagrant_data/containers. For example, you can start the arista-ceos scenario:
+```
+cd /vagrant_data/containers/arista-ceos
+sudo docker-compose up -d
+sudo docker exec -it aristaceos_ceos-1_1 /bin/bash
+```
+
+- TODO - Auto configure IP on ceos
+
+- TODO - Install Ansible
+
+- TODO - Manage cEOS Hosts with Ansible
 
 - Stop the machine
 ```
