@@ -45,16 +45,55 @@ vagrant up --provider=hyperv
 vagrant ssh
 ```
 
-- Docker scenarios are found in [/containers](./containers). For example, you can start the arista-ceos scenario:
+- Docker scenarios are found in [/containers](./containers) and are mounted in the /vagrant_data directory via SMB. For example, you can start the arista-ceos scenario:
 ```
 cd /vagrant_data/containers/arista-ceos
 sudo docker-compose up -d
 sudo docker exec -it aristaceos_ceos-1_1 /bin/bash
 ```
 
-- TODO - Auto configure IP on ceos
+- Configure the management IP on the ceos container
+```
+# Get the container IP
+sudo docker network inspect oob-automation
+# Alternative method - does not give the netmask
+sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' aristaceos_ceos-1_1
+# Configure the IP
+sudo docker exec -it aristaceos_ceos-1_1 /bin/bash
+Cli
+enable
+configure terminal
+interface management 0
+ip address 172.19.0.2/16
+ping 172.19.0.1
+end
+write
+exit
+exit
+```
 
-- TODO - Install Ansible
+- Create the automator machine ([source](https://packetpushers.net/building-a-docker-network-automation-container/))
+```
+cd /vagrant_data/containers/automator
+sudo docker build -f ./Dockerfile -t automator .
+sudo docker image ls
+```
+
+- Start the automator container
+```
+cd /vagrant_data/containers/automator
+sudo docker-compose up -d
+sudo docker exec -it automator_automator_1 /bin/bash
+```
+
+- Ping the ceos container from the automator container
+```
+root@automator:/projects# ping aristaceos_ceos-1_1
+PING aristaceos_ceos-1_1 (172.19.0.2) 56(84) bytes of data.
+64 bytes from aristaceos_ceos-1_1.oob-automation (172.19.0.2): icmp_seq=1 ttl=64 time=0.090 ms
+64 bytes from aristaceos_ceos-1_1.oob-automation (172.19.0.2): icmp_seq=2 ttl=64 time=0.129 ms
+64 bytes from aristaceos_ceos-1_1.oob-automation (172.19.0.2): icmp_seq=3 ttl=64 time=0.190 ms
+```
 
 - TODO - Manage cEOS Hosts with Ansible
 
