@@ -45,7 +45,7 @@ vagrant up --provider=hyperv
 vagrant ssh
 ```
 
-- Docker scenarios are found in [/vagrant_data/containers]{/vagrant_data/containers}. For example, you can start the arista-ceos scenario:
+- Docker scenarios are found in [/vagrant_data/containers]{./vagrant_data/containers}. For example, you can start the arista-ceos scenario:
 ```
 cd /vagrant_data/containers/arista-ceos
 sudo docker-compose up -d
