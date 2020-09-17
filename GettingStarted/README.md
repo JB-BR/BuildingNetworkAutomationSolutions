@@ -48,18 +48,18 @@ vagrant ssh
 - Docker scenarios are found in [/containers](./containers) and are mounted in the /vagrant_data directory via SMB. For example, you can start the arista-ceos scenario:
 ```
 cd /vagrant_data/containers/arista-ceos
-sudo docker-compose up -d
-sudo docker exec -it aristaceos_ceos-1_1 /bin/bash
+docker-compose up -d
+docker exec -it aristaceos_ceos-1_1 /bin/bash
 ```
 
 - Configure the management IP on the ceos container
 ```
 # Get the container IP
-sudo docker network inspect oob-automation
+docker network inspect oob-automation
 # Alternative method - does not give the netmask
-sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' aristaceos_ceos-1_1
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' aristaceos_ceos-1_1
 # Configure the IP
-sudo docker exec -it aristaceos_ceos-1_1 /bin/bash
+docker exec -it aristaceos_ceos-1_1 /bin/bash
 Cli
 enable
 configure terminal
@@ -77,15 +77,15 @@ exit
 - Create the automator machine ([source](https://packetpushers.net/building-a-docker-network-automation-container/))
 ```
 cd /vagrant_data/containers/automator
-sudo docker build -f ./Dockerfile -t automator .
-sudo docker image ls
+docker build -f ./Dockerfile -t automator .
+docker image ls
 ```
 
 - Start the automator container
 ```
 cd /vagrant_data/containers/automator
-sudo docker-compose up -d
-sudo docker exec -it automator_automator_1 /bin/bash
+docker-compose up -d
+docker exec -it automator_automator_1 /bin/bash
 ```
 
 - Ping the ceos container from the automator container
@@ -99,7 +99,7 @@ PING aristaceos_ceos-1_1 (172.19.0.2) 56(84) bytes of data.
 
 - Manage cEOS Hosts with Ansible
 ```
-sudo docker exec -it automator_automator_1 /bin/bash
+docker exec -it automator_automator_1 /bin/bash
 touch inventory.ini
 echo "aristaceos_ceos-1_1 ansible_user=admin ansible_password=admin" > inventory.ini
 cat inventory.ini
