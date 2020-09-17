@@ -66,6 +66,8 @@ configure terminal
 interface management 0
 ip address 172.19.0.2/16
 ping 172.19.0.1
+exit
+username admin secret admin privilege 15 role network-admin
 end
 write
 exit
@@ -95,7 +97,14 @@ PING aristaceos_ceos-1_1 (172.19.0.2) 56(84) bytes of data.
 64 bytes from aristaceos_ceos-1_1.oob-automation (172.19.0.2): icmp_seq=3 ttl=64 time=0.190 ms
 ```
 
-- TODO - Manage cEOS Hosts with Ansible
+- Manage cEOS Hosts with Ansible
+```
+sudo docker exec -it automator_automator_1 /bin/bash
+touch inventory.ini
+echo "aristaceos_ceos-1_1 ansible_user=admin ansible_password=admin" > inventory.ini
+cat inventory.ini
+ansible all -i inventory.ini -m raw -a "show version" -vvv
+```
 
 - Stop the machine
 ```
