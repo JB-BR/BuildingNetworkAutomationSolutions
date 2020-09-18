@@ -2,7 +2,7 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: list employees
+    - name: GET Arista WebPage
       uri:
         validate_certs: false
         method: GET
@@ -11,6 +11,3 @@
         headers:
           Accept: application/json
       register: response
-
-    - debug:
-        msg: "{{ response.content }}"

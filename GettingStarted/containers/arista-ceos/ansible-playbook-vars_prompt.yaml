@@ -1,0 +1,16 @@
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_prompts.html
+# Ask the user to provide their username (will be displayed) and their password (will be hidden)
+---
+- hosts: localhost
+  vars_prompt:
+
+    - name: username
+      prompt: "What is your username?"
+      private: no
+
+    - name: password
+      prompt: "What is your password?"
+
+  tasks:
+    - debug:
+        msg: 'Logging in as {{ username }} with {{ password }}'

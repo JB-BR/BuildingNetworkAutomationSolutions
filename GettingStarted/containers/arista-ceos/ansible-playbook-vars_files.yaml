@@ -1,0 +1,10 @@
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html
+# Retreives the username and password stored in vars_files.yaml
+---
+- hosts: localhost
+  vars_files:
+    - /vagrant_data/containers/arista-ceos/vars_files.yaml
+
+  tasks:
+    - debug:
+        msg: 'Logging in as {{ username }} with {{ password }}'
