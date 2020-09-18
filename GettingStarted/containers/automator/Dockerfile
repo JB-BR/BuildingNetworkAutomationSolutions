@@ -10,5 +10,9 @@ ADD . /install
 # Install any needed packages specified in requirements.txt
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
+# Install sshpass
+RUN apt-get update
+RUN apt-get --assume-yes install sshpass 
+
 # Set new default WORKDIR
 WORKDIR /projects

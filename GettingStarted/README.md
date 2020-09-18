@@ -106,6 +106,12 @@ cat inventory.ini
 ansible all -i inventory.ini -m raw -a "show version" -vvv
 ```
 
+- Manage cEOS Host with Ansible and REST API
+```
+docker exec -it automator_automator_1 /bin/bash
+cd /vagrant_data/containers/arista-ceos/
+ansible all -i inventory.ini 
+```
 - Stop the machine
 ```
 vagrant suspend
