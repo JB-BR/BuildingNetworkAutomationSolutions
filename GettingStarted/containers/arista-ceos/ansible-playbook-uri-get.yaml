@@ -1,0 +1,16 @@
+- name: Make requests to example api
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: list employees
+      uri:
+        validate_certs: false
+        method: GET
+        url: "https://aristaceos_ceos-1_1"
+        return_content: yes
+        headers:
+          Accept: application/json
+      register: response
+
+    - debug:
+        msg: "{{ response.content }}"

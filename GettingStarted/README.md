@@ -68,6 +68,10 @@ ip address 172.19.0.2/16
 ping 172.19.0.1
 exit
 username admin secret admin privilege 15 role network-admin
+management api http-commands
+no shutdown
+management ssh
+username admin
 end
 write
 exit
@@ -100,17 +104,15 @@ PING aristaceos_ceos-1_1 (172.19.0.2) 56(84) bytes of data.
 - Manage cEOS Hosts with Ansible
 ```
 docker exec -it automator_automator_1 /bin/bash
-touch inventory.ini
-echo "aristaceos_ceos-1_1 ansible_user=admin ansible_password=admin" > inventory.ini
-cat inventory.ini
+cd /vagrant_data/containers/arista-ceos/
 ansible all -i inventory.ini -m raw -a "show version" -vvv
 ```
 
-- Manage cEOS Host with Ansible and REST API
+- Manage cEOS Host with Ansible and REST API - Perform a simple GET
 ```
 docker exec -it automator_automator_1 /bin/bash
 cd /vagrant_data/containers/arista-ceos/
-ansible all -i inventory.ini 
+ansible-playbook ansible-playbook-uri-get.yaml -i inventory.ini -vvv
 ```
 - Stop the machine
 ```
