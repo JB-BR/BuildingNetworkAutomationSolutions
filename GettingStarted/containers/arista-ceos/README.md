@@ -36,3 +36,15 @@ PING 172.19.0.1 (172.19.0.1) 72(100) bytes of data.
 80 bytes from 172.19.0.1: icmp_seq=4 ttl=64 time=0.028 ms
 80 bytes from 172.19.0.1: icmp_seq=5 ttl=64 time=0.025 ms
 ```
+
+- Manage cEOS Host with Ansible and the Automator container
+[arista.eos.eos_config plugin](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_config_module.html)
+[Automator](https://github.com/JB-BR/BuildingNetworkAutomationSolutions/tree/master/GettingStarted/containers/automator)
+[Arista Ansible examples](https://github.com/titom73/ansible-arista-module-howto)
+[Arista Ansible examples](https://ansible-arista-howto.readthedocs.io/en/latest/overview.html)
+```
+docker exec -it automator_automator_1 /bin/bash
+cd /vagrant_data/containers/arista-ceos/
+# Install ansible galaxy
+ansible-galaxy collection install arista.eos
+```
