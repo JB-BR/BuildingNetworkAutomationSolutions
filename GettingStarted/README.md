@@ -115,15 +115,6 @@ cd /vagrant_data/containers/arista-ceos/
 ansible-playbook ansible-playbook-uri-get.yaml -i inventory.ini -vvv
 ```
 
-- Manage cEOS Host with Ansible and the [arista.eos.eos_config plugin](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_config_module.html)
-```
-docker exec -it automator_automator_1 /bin/bash
-cd /vagrant_data/containers/arista-ceos/
-# Install ansible galaxy
-ansible-galaxy collection install arista.eos
-```
-
-
 - Stop the machine
 ```
 vagrant suspend

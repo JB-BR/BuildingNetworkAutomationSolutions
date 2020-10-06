@@ -6,17 +6,22 @@ aristaceos = "cEOS64-lab-4.24.2.1F.tar.xz"
 $shellscript = <<-SHELL
      echo "\n\nUpdate Linux..."
      sudo apt-get --assume-yes update
+
      echo "\n\nInstall Docker..."
      sudo apt-get --assume-yes install docker*
 
-     echo "\n\nCreate an out-of-band network which will be used by all the automation containers"
+     echo "\n\nCreate an out-of-band network which will be used by all the automation containers..."
      sudo docker network create oob-automation
 
-     echo "\n\nImport cEOS-lab (Free Dowload: https://www.arista.com/en/support/software-download )"
+     echo "\n\nImport cEOS-lab (Free Dowload: https://www.arista.com/en/support/software-download)..."
      sudo docker import /vagrant_data/$1 ceosimage:latest
 
      sudo groupadd docker
      sudo usermod -aG docker vagrant
+
+     echo "\n\nInstall PIP..."
+     sudo apt-get --assume-yes install python3-pip
+
   SHELL
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -39,4 +44,11 @@ Vagrant.configure("2") do |config|
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: $shellscript, :args => aristaceos
+  
+  # Vagrant Tips : https://docs.microsoft.com/en-us/virtualization/community/team-blog/2017/20170706-vagrant-and-hyper-v-tips-and-tricks
+  config.vm.provider "hyperv" do |h|
+    h.enable_virtualization_extensions = true
+    h.linked_clone = true
+    h.memory = 2048
+  end
 end
