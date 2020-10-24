@@ -135,3 +135,6 @@ ceos2 ansible_host=127.0.0.1 ansible_port=8001
 ansible_user='ansible'
 ansible_ssh_pass='ansible'
 ```
+
+### Parsing Data
+https://www.ipspace.net/kb/Ansible/Parsing_Text_Printouts_Ansible.html
