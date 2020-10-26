@@ -1,0 +1,49 @@
+---
+- name: Run commands on remote LAB devices
+  hosts: all
+  connection: local
+  gather_facts: false
+  pre_tasks:
+    - include_vars: "authentication.yaml"
+
+  tasks:
+    - name: Configure device hostname from lines
+      eos_config:
+        provider: "{{arista_credentials}}"
+        lines:
+          - "hostname MyHostname"
+          - "ntp server 1.1.1.1"
+          - "vlan 1001"
+          - "vlan 1002"
+          - "   name 1002-LTD-Transfer"
+          - "vlan 1003"
+          - "   name VLAN-1003-LTD"
+          - "vlan 1004"
+          - "   name 1004-LTD-HA-Blablabla"
+          - "vlan 1005"
+          - "   name 1005-LTD-Transfer"
+
+    - name: Configure device hostname from lines
+      eos_config:
+        provider: "{{arista_credentials}}"
+        lines:
+          - "hostname {{inventory_hostname}}-automation"
+          - "ntp server 1.1.1.1"
+          - "vlan 1001"
+          - "   name 1001-LTD-Transfer"
+          - "vlan 1002"
+          - "   name 1002-LTD-HA"
+          - "vlan 1003"
+          - "   name 1003-LTD-Transfer"
+          - "vlan 1004"
+          - "   name 1004-LTD-Transfer"
+          - "vlan 1005"
+          - "   name 1005-LTD-Transfer"
+
+    - name: Configure interface description
+      eos_config:
+        provider: "{{arista_credentials}}"
+        lines:
+          - description My Wonderful description
+        parents: interface Ethernet 1
+        replace: block

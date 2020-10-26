@@ -1,0 +1,7 @@
+---
+- hosts: lab
+  gather_facts: false
+  tasks:
+     - arista.eos.eos_vlans:
+          state: gathered
+     - debug: var=vars
