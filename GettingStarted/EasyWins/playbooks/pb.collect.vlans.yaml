@@ -2,6 +2,7 @@
 - hosts: lab
   gather_facts: false
   tasks:
-     - arista.eos.eos_vlans:
-          state: gathered
-     - debug: var=vars
+    - arista.eos.eos_vlans:
+        state: gathered
+      register: vlans
+    - debug: var=vlans.stdout

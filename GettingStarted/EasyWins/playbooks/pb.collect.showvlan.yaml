@@ -1,0 +1,10 @@
+---
+- hosts: lab
+  gather_facts: false
+  tasks:
+    - arista.eos.eos_command:
+        commands:
+           - command: show vlan
+             output: json
+      register: showvlan
+    - debug: var=showvlan.stdout
