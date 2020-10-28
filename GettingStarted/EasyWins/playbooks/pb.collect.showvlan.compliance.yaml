@@ -1,0 +1,23 @@
+---
+- hosts: lab
+  gather_facts: false
+  tasks:
+    - name: Collect the VLANs using Arista eAPI and save the result in the show_vlan variable
+      arista.eos.eos_command:
+        commands:
+           - command: show vlan
+             output: json
+      register: show_vlan
+
+    - name: Display the vlans JSON object contained in the show_vlan variable
+      debug: var=show_vlan.stdout[0].vlans 
+            # show_vlan is a json object containing many parameters like ansible_facts, failed status, stdout_lines and stdout.
+            # stdout is an array containing only one json object, thus only need stdout[0]
+            # vlans is one of the json obecjts inside stdout[0] and it contains the vlans sorted by ID
+
+    - name: Add all the VLAN names in a single array using JMESPath "Object Projections"
+      set_fact:
+        vlan_list: "{{ show_vlan.stdout[0].vlans | community.general.json_query('*.name') }}"
+
+    - name: Display the content of vlan_list
+      debug: var=vlan_list

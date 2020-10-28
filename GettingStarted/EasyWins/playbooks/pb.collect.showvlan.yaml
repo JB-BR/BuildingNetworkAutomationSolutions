@@ -7,4 +7,7 @@
            - command: show vlan
              output: json
       register: showvlan
-    - debug: var=showvlan.stdout
+    - debug: var=showvlan.stdout[0].vlans
+            # showvlan is a json object containing many parameters like ansible_facts, failed status, stdout_lines and stdout.
+            # stdout is an array containing only one json object, thus only need stdout[0]
+            # vlans is one of the json obecjts inside stdout[0] and it contains the vlans sorted by ID

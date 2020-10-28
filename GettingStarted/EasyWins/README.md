@@ -8,6 +8,7 @@ fatal: [ceos1]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "
 
 Moreover, Arista CLI / eAPI can output JSON (perfect for programms) by default whereas arista.eos.eos_vlans outpus yaml (good for humans) so why even bother with solving this error?
 
+
 ## Working Notes
 
 ###  How Ansible Playbooks Really work
@@ -79,3 +80,12 @@ Example:
 2. Use those credentials in ansible to get device credentials from a password vault
 3. Regularily rotate the clear text credentials (for example once a month)
 4. Rotate the credentials in the password vault even more often
+
+### Selecting JSON Data 
+Source: https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#selecting-json-data-json-queries
+Example: https://jmespath.org/tutorial.html
+Install the ansible community.general
+Install JMESPath "sudo apt install python3-jmespath"
+Re-install ansible with Python3 : "pip3 install ansible"
+Verify the ansible version: "ansible --version"
+Verify the Python version used by ansible: "ansible --version | grep "python version"

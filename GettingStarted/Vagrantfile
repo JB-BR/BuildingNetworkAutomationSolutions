@@ -22,6 +22,8 @@ $shellscript = <<-SHELL
      echo "\n\nInstall PIP..."
      sudo apt-get --assume-yes install python3-pip
 
+     echo "\n\nInstall JMES Path to parse JSON data..."
+     sudo apt install python3-jmespath
   SHELL
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
