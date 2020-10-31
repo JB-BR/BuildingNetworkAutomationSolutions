@@ -21,3 +21,44 @@
 
     - name: Display the content of vlan_list
       debug: var=vlan_list
+
+    - name: Initialize the compliance report (a JSON Object)
+      set_fact:
+        report: '{"compliance_arista_vlan_name":{"status":true,"reason":[]}}'
+        report_status: true
+        report_reason: []
+
+    - name: Test
+      debug: var=report_reason
+
+    - name: Naming convention compliance check.
+      loop: "{{ vlan_list }}"                                          # For each item in vlan list
+      when: not item is regex("^[0-9]{1,4}-[A-Z]{3,6}-[a-zA-Z0-9_]*$") # If the item doese not match the naming convention
+      set_fact:                                                        # Then set the compliance report to "false" and append the item the the reason list
+        report_status: false
+        report_reason: "{{ report_reason + [item] }}"                  # The "+" can only merge lists together, thus item is placed between square brackets
+
+    - name: Test
+      debug: var=report_reason
+#{
+#   "vlan_compliance":{
+#      "status":"Warning",
+#      "reason":[
+#         "default",
+#         "1005-LTD-Transfer",
+#         "1004-LTD-Transfer",
+#         "1003-LTD-Transfer",
+#         "1002-LTD-HA",
+#         "1001-LTD-Transfer"
+#      ]
+#   }
+#}
+# ^[0-9]{1,4}-[A-Z]{3,6}-[a-zA-Z0-9_]*$
+
+#    - name: Give me list combo of two lists
+#      ansible.builtin.debug:
+#       msg: "{{ [1,2,3,4,5] | zip(['a','b','c','d','e','f']) | list }}"
+#
+#    - name: Give me shortest combo of two lists
+#      ansible.builtin.debug:
+#        msg: "{{ [1,2,3] | zip(['a','b','c','d','e','f']) | list }}"
