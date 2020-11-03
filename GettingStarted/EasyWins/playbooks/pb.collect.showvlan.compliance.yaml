@@ -2,36 +2,32 @@
 - hosts: lab
   gather_facts: false
   tasks:
-    - name: Collect the VLANs using Arista eAPI and save the result in the show_vlan variable
+    - name: Task 1 - Collect the VLANs using Arista eAPI and save the result in the show_vlan variable
       arista.eos.eos_command:
         commands:
            - command: show vlan
              output: json
       register: show_vlan
 
-    - name: Display the vlans JSON object contained in the show_vlan variable
+    - name: Task 2 - Display the vlans JSON object contained in the show_vlan variable
       debug: var=show_vlan.stdout[0].vlans 
             # show_vlan is a json object containing many parameters like ansible_facts, failed status, stdout_lines and stdout.
             # stdout is an array containing only one json object, thus only need stdout[0]
             # vlans is one of the json obecjts inside stdout[0] and it contains the vlans sorted by ID
 
-    - name: Add all the VLAN names in a single array using JMESPath "Object Projections"
+    - name: Task 3 - Add all the VLAN names in a single array using JMESPath "Object Projections"
       set_fact:
         vlan_list: "{{ show_vlan.stdout[0].vlans | community.general.json_query('*.name') }}"
 
-    - name: Display the content of vlan_list
+    - name: Task 4 - Display the content of vlan_list
       debug: var=vlan_list
 
-    - name: Initialize the compliance report (a JSON Object)
+    - name: Task 5 - Initialize the compliance report variables
       set_fact:
-        report: '{"compliance_arista_vlan_name":{"status":true,"reason":[]}}'
         report_status: true
         report_reason: []
 
-    - name: Test
-      debug: var=report_reason
-
-    - name: Naming convention compliance check.
+    - name: Task 6 - Naming convention compliance check.
       loop: "{{ vlan_list }}"                                          # For each item in vlan list
       when: not item is regex("^[0-9]{1,4}-[A-Z]{3,6}-[a-zA-Z0-9_]*$") # If the item doese not match the naming convention
       set_fact:                                                        # Then set the compliance report to "false" and append the item the the reason list
@@ -40,25 +36,10 @@
 
     - name: Test
       debug: var=report_reason
-#{
-#   "vlan_compliance":{
-#      "status":"Warning",
-#      "reason":[
-#         "default",
-#         "1005-LTD-Transfer",
-#         "1004-LTD-Transfer",
-#         "1003-LTD-Transfer",
-#         "1002-LTD-HA",
-#         "1001-LTD-Transfer"
-#      ]
-#   }
-#}
-# ^[0-9]{1,4}-[A-Z]{3,6}-[a-zA-Z0-9_]*$
 
-#    - name: Give me list combo of two lists
-#      ansible.builtin.debug:
-#       msg: "{{ [1,2,3,4,5] | zip(['a','b','c','d','e','f']) | list }}"
-#
-#    - name: Give me shortest combo of two lists
-#      ansible.builtin.debug:
-#        msg: "{{ [1,2,3] | zip(['a','b','c','d','e','f']) | list }}"
+    - name: Test
+      set_fact:
+        report_reason: "{{ report_reason | to_json }}"
+
+    - name: Test
+      debug: var=report_reason

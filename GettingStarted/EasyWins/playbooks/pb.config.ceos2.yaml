@@ -1,0 +1,21 @@
+---
+- name: Run commands on ceos2 - Add non-compliant VLANs
+  hosts: ceos2
+  gather_facts: false
+
+  tasks:
+    - name: Configure device hostname from lines
+      arista.eos.eos_command:
+        commands:
+          - "enable"
+          - "configure terminal"
+          - "vlan 1001"
+          - "   name 1001-LTD-Transfer"
+          - "vlan 1002"
+          - "   name LTD-1002-HA"
+          - "vlan 1003"
+          - "   name 1003-LTD-not-OK"
+          - "vlan 1004"
+          - "   name 1004-LTD-this_is_OK"
+          - "vlan 1005"
+          - "   name 1005-LT-NotOk"

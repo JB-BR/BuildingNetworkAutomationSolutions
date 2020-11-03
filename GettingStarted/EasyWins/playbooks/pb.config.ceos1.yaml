@@ -1,6 +1,6 @@
 ---
-- name: Run commands on remote LAB devices
-  hosts: lab
+- name: Run commands on ceos1 - Add compliant VLANs
+  hosts: ceos1
   gather_facts: false
 
   tasks:
@@ -9,8 +9,8 @@
         commands:
           - "enable"
           - "configure terminal"
-          - "hostname {{inventory_hostname}}-automation"
-          - "ntp server 1.1.1.1"
+          - "vlan 1"
+          - "   name 1-MGMT-DotNotUse"
           - "vlan 1001"
           - "   name 1001-LTD-Transfer"
           - "vlan 1002"
