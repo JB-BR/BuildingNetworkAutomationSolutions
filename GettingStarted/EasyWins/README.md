@@ -28,6 +28,14 @@ ansible-galaxy collection install arista.eos
 ansible-galaxy collection install community.general
 ```
 
+We also need python3 jmespath in order to work on JSON data with Ansible. 
+Source: https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#selecting-json-data-json-queries
+Example: https://jmespath.org/tutorial.html
+Install JMESPath:
+```
+sudo apt install python3-jmespath
+```
+
 Finally, configure ceos1 and ceos2 with few vlans
 ```
 cd /vagrant_data/EasyWins/playbooks/
@@ -50,30 +58,30 @@ ansible-playbook -i inventory.vlans.ini pb.collect.showvlan.compliance.yaml
            +-------------------------------------------+
             |                                      |
             v                                      v
-    +-----------------+                       +-----------------+
-    | 2. Gather facts |                       | 2. Gather facts |
-    +-----------------+                       +-----------------+
+    +-----------------+                    +-----------------+
+    | 2. Gather facts |                    | 2. Gather facts |
+    +-----------------+                    +-----------------+
             |                                      |
             v                                      v
-    +--------------+                       +--------------+
+    +-----------------+                    +-----------------+
     |3. Execute task 1|                    |3. Execute task 1|
-    +--------------+                       +--------------+
+    +-----------------+                    +-----------------+
             |                                      |
             v                                      v
-    +--------------+                       +--------------+
+    +-----------------+                    +-----------------+
     |4. Execute task 2|                    |4. Execute task 2|
-    +--------------+                       +--------------+
+    +-----------------+                    +-----------------+
             |                                      |
             :                                      :
             |                                      |
             v                                      v
-    +--------------+                       +--------------+
-    |n . Execute task n|                   |n. Execute task n|
-    +--------------+                       +--------------+
+    +------------------+                   +-----------------+
+    |9 . Execute task 7|                   |9. Execute task 7|
+    +------------------+                   +-----------------+
             |                                      |
             v                                      v
            +----------------------------------------+
-           |                Cleanup                 |
+           |            10. Cleanup                 |
            +----------------------------------------+
            
 Source: ipspace.net - Ansible online course - Using Ansible - Ansible Playbooks
@@ -123,23 +131,14 @@ Initialize the Ansible facts for the report with their default values. By defaul
 8. Execute task 6
 Loop through the "vlan_list". If a vlan name does not match the naming convention defined by the [regex](https://regex101.com/r/5qdM4N/1), the "report_status" is set to false and the faulty vlan name is added to the "report_reason" list. 
 
-?. Cleanup
-Delete the python code on the hosts
+9. Execute task 7
+The report is a file containing a JSON objects containing all compliance test results. 
+For example, for the Arista device n : 
+- hosts[n] : the device hostname
+- status[n] : the device compliance status (either true or false)
+- reason[n] : an array containing the device non-compliant VLANs (if any)
+This report should be consumed by a monitoring tool which will raise an alert when any of the devices status is "false".
+
+10. Cleanup
 Delete all the facts collected during this play
-
-```
-
-### Ideas - Credentials strategy
-1. Store clear text credentials in a yaml file outside this repository
-2. Use those credentials in ansible to get device credentials from a password vault
-3. Regularily rotate the clear text credentials (for example once a month)
-4. Rotate the credentials in the password vault even more often
-
-### Selecting JSON Data 
-Source: https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#selecting-json-data-json-queries
-Example: https://jmespath.org/tutorial.html
-Install the ansible community.general
-Install JMESPath "sudo apt install python3-jmespath"
-Re-install ansible with Python3 : "pip3 install ansible"
-Verify the ansible version: "ansible --version"
-Verify the Python version used by ansible: "ansible --version | grep "python version"
+When managing linux servers, piece of Python code uploaded to the targets are also deleted. 

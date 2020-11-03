@@ -34,12 +34,22 @@
         report_status: false
         report_reason: "{{ report_reason + [item] }}"                  # The "+" can only merge lists together, thus item is placed between square brackets
 
-    - name: Test
-      debug: var=report_reason
+#    - name: Task 7 - Create the report
+#      lineinfile:
+#        path: /tmp/compliance_vlan_names_arista.task7.json
+#        create: yes
+#        regexp: '^.*{{ inventory_hostname }}'                          # Look if a line already exists for the current target host and update it. If the line does not exist, it is created.
+#        line: |                                                        # The pipe indicates Ansible that a multiline input will follow
+#              { "{{ inventory_hostname }}": {"status": {{report_status}}, "reason": {{report_reason}} }}
 
-    - name: Test
-      set_fact:
-        report_reason: "{{ report_reason | to_json }}"
-
-    - name: Test
-      debug: var=report_reason
+- hosts: localhost
+  tasks:
+    - name: Task 7 - Create the report
+      copy:
+        content: |
+                 {
+                    "hosts": {{ vars.hostvars | community.general.json_query('*.inventory_hostname')}},
+                    "status": {{ vars.hostvars | community.general.json_query('*.report_status')}},
+                    "reason": {{ vars.hostvars | community.general.json_query('*.report_reason')}}
+                 }
+        dest: /tmp/compliance_vlan_names_arista.json
