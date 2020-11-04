@@ -4,3 +4,5 @@
 3. Regularily rotate the clear text credentials (for example once a month)
 4. Rotate the credentials in the password vault even more often
 
+### Ideas - Dynamic inventory
+1. Use netbox to dynamically generate the inventory

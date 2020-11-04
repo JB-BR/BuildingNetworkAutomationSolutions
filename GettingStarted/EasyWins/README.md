@@ -29,8 +29,8 @@ ansible-galaxy collection install community.general
 ```
 
 We also need python3 jmespath in order to work on JSON data with Ansible. 
-Source: https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#selecting-json-data-json-queries
-Example: https://jmespath.org/tutorial.html
+- Source: https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#selecting-json-data-json-queries
+- Example: https://jmespath.org/tutorial.html
 Install JMESPath:
 ```
 sudo apt install python3-jmespath
@@ -60,7 +60,7 @@ ansible-playbook -i inventory.vlans.ini pb.collect.showvlan.compliance.yaml
             |                                      |                                    |
             v                                      v                                    |
     +-----------------+                    +-----------------+                          |
-    |     Device 1    |                    |     Device 2    |                          |
+    |      ceos1      |                    |      ceos2      |                          |
     +-----------------+                    +-----------------+                          |
             |                                      |                                    |
             v                                      v                                    |
@@ -80,7 +80,7 @@ ansible-playbook -i inventory.vlans.ini pb.collect.showvlan.compliance.yaml
     |8. Execute task 6|                    |8. Execute task 6|                          |
     +-----------------+                    +-----------------+                          v
             |                                      |                          +-------------------+
-            |                                      |                          |     Localhost     |
+            |                                      |                          |     localhost     |
             |                                      |                          +-------------------+
             |                                      |                                    |
             |                                      |                                    v
@@ -93,18 +93,17 @@ ansible-playbook -i inventory.vlans.ini pb.collect.showvlan.compliance.yaml
            |                                 10. Cleanup                                  |
            +------------------------------------------------------------------------------+
            
-Source: ipspace.net - Ansible online course - Using Ansible - Ansible Playbooks
+Original source: ipspace.net - Ansible online course - Using Ansible - Ansible Playbooks
 ```
 
-
-1. Select hosts to be included in this play
+###### 1. Select hosts to be included in this play
 Ansible select the hosts to be included in this play:
 ```
 - hosts: lab
 ```
 In this case the hosts under the lab category in the inventory file inventory.vlans.ini will be selected. For all the target hosts, Ansible collects the ansible variables as defined on the inventory file.
 
-2. Gather facts
+###### 2. Gather facts
 This step is skipped in the playbook:
 ```
   gather_facts: false
@@ -115,7 +114,7 @@ When true, this step is taken care of by the Ansible [setup module](https://docs
 * Collects facts on remote hosts using the Python code and store the results in so-called "ansible variables"
 Obviously this only works when remote host is a Linux server. For other scenarios (network devices, closed appliances, Web-API, Windows Server) it is not always possible/necessary. 
 
-3. Execute task 1
+###### 3. Execute task 1
 Execute a "show vlan | json" via the eAPI and save the resust as an Ansible fact in show_vlan. 
 
 Note: 
@@ -125,22 +124,22 @@ fatal: [ceos1]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "
 ```
 Moreover, Arista CLI / eAPI can output JSON by default (perfect for machines) whereas the arista.eos.eos_vlans plugin outpus yaml (good for humans) so why even bother with solving this error?
 
-4. Execute task 2
+###### 4. Execute task 2
 Displays the content of show_vlan. The "show vlan" output itself is contained within a child element called "vlans" itself contained into the child element "stdout".
 
-5. Execute task 3
+###### 5. Execute task 3
 Using the json_query module, we create a list of vlan names by selecting the "name" element in all vlans. This list is stored into the Ansible fact "vlan_list".
 
-6. Execute task 4
+###### 6. Execute task 4
 Display the list of vlan names stored in "vlan_list".
 
-7. Execute task 5
+###### 7. Execute task 5
 Initialize the Ansible facts for the report with their default values. By default the compliance test is passed ("report_status: true").
 
-8. Execute task 6
+###### 8. Execute task 6
 Loop through the "vlan_list". If a vlan name does not match the naming convention defined by the [regex](https://regex101.com/r/5qdM4N/1), the "report_status" is set to false and the faulty vlan name is added to the "report_reason" list. 
 
-9. Execute task 7
+###### 9. Execute task 7
 The report is a file containing a JSON objects containing all compliance test results. 
 For example, for the Arista device n : 
 - hosts[n] : the device hostname
@@ -148,6 +147,6 @@ For example, for the Arista device n :
 - reason[n] : an array containing the device non-compliant VLANs (if any)
 This report should be consumed by a monitoring tool which will raise an alert when any of the devices status is "false".
 
-10. Cleanup
+###### 10. Cleanup
 Delete all the facts collected during this play
 When managing linux servers, piece of Python code uploaded to the targets are also deleted. 
