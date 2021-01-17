@@ -1,0 +1,27 @@
+#Standard Policy between the VPN Security Zone and the Customer Transfer Zone
+set security policies from-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-VPN to-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-Transfer policy POLICY-{{service_ipsec_vpn.customer_name}}-VPN2Transfer description "{{service_ipsec_vpn.change_request}} VPN to {{service_ipsec_vpn.customer_name}}"
+set security policies from-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-VPN to-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-Transfer policy POLICY-{{service_ipsec_vpn.customer_name}}-VPN2Transfer match source-address any destination-address any application any
+set security policies from-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-VPN to-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-Transfer policy POLICY-{{service_ipsec_vpn.customer_name}}-VPN2Transfer then permit
+set security policies from-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-VPN to-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-Transfer policy POLICY-{{service_ipsec_vpn.customer_name}}-VPN2Transfer then log session-close
+
+set security policies from-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-Transfer to-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-VPN policy POLICY-{{service_ipsec_vpn.customer_name}}-Transfer2VPN description "{{service_ipsec_vpn.change_request}} VPN to {{service_ipsec_vpn.customer_name}}"
+set security policies from-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-Transfer to-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-VPN policy POLICY-{{service_ipsec_vpn.customer_name}}-Transfer2VPN match source-address any destination-address any application any
+set security policies from-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-Transfer to-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-VPN policy POLICY-{{service_ipsec_vpn.customer_name}}-Transfer2VPN then permit
+set security policies from-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-Transfer to-zone SECURITYZONE-{{service_ipsec_vpn.customer_name}}-VPN policy POLICY-{{service_ipsec_vpn.customer_name}}-Transfer2VPN then log session-close
+
+# Interface
+set routing-instances VRF-{{service_ipsec_vpn.customer_name}} interface st0.{{my_firewall_hostname.tunnel_interface_number}}
+set security zones security-zone SECZN-{{service_ipsec_vpn.customer_name}}-VPN interfaces st0.{{my_firewall_hostname.tunnel_interface_number}}
+set interfaces st0 unit {{my_firewall_hostname.tunnel_interface_number}} family inet
+set interfaces st0 unit {{my_firewall_hostname.tunnel_interface_number}} description VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}}
+
+# Phase 1
+set security ike proposal P1-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} authentication-method pre-shared-keys dh-group group{{service_ipsec_vpn.p1.dh_group}} authentication-algorithm {{service_ipsec_vpn.p1.integrity}} encryption-algorithm {{service_ipsec_vpn.p1.encryption}} lifetime-seconds {{service_ipsec_vpn.p1.renegociation_time}}
+set security ike policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} mode main proposals P1-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} pre-shared-key ascii-text {{service_ipsec_vpn.psk}}
+set security ike gateway GW-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} ike-policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} address {{service_ipsec_vpn.gw.customer_ip}} external-interface reth1.{{my_firewall_hostname.external_interface_number}} version {{service_ipsec_vpn.p1.ike_version}}
+
+# Phase 2
+set security ipsec proposal P2-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} protocol esp authentication-algorithm {{service_ipsec_vpn.p2.integrity}} encryption-algorithm {{service_ipsec_vpn.p2.encryption}} lifetime-seconds {{service_ipsec_vpn.p2.renegociation_time}}
+set security ipsec policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} perfect-forward-secrecy keys group{{service_ipsec_vpn.p2.dh_group}}
+set security ipsec policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} proposals P2-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}}
+set security ipsec vpn VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} establish-tunnels immediately bind-interface st0.{{my_firewall_hostname.tunnel_interface_number}} ike gateway GW-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} ipsec-policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} 
