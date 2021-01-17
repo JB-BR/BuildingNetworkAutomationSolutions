@@ -25,3 +25,22 @@ set security ipsec proposal P2-{{service_ipsec_vpn.customer_name}}-{{service_ips
 set security ipsec policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} perfect-forward-secrecy keys group{{service_ipsec_vpn.p2.dh_group}}
 set security ipsec policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} proposals P2-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}}
 set security ipsec vpn VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} establish-tunnels immediately bind-interface st0.{{my_firewall_hostname.tunnel_interface_number}} ike gateway GW-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} ipsec-policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} 
+
+{# Skip the traffic selectors creation if the "universal tunnel" is enabled, thus creatig a default 0.0.0.0/0 tunnel #}
+{% if service_ipsec_vpn.p2.universal_tunnel is sameas false %}
+
+{% set ts_id = [1] %} {# Use a traffic selector ID per traffic selector. We use an object because of Jinja2 scoping issue : https://stackoverflow.com/questions/7537439/how-to-increment-a-variable-on-a-for-loop-in-jinja-template #}
+
+# Traffis Selectors
+{# Outer "for": #}
+{# Loop For each remote network... #}
+{% for remote_network in service_ipsec_vpn.p2.customer_networks %}
+
+{# Inner "for": #}
+{# ... create a traffic selector with each local network #}
+{% for local_network in service_ipsec_vpn.p2.provider_networks %}
+set security ipsec vpn VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} traffic-selector TS{{ts_id[0]}} remote-ip {{remote_network}} local-ip {{local_network}}
+{% if ts_id.append(ts_id.pop() + 1) %}{% endif %}{# Increment the ts_id by 1 #}
+{% endfor %}{# End the inner "for" #}
+{% endfor %}{# End the outer "for" #}
+{% endif %}
