@@ -3,7 +3,7 @@
   gather_facts: false
   tasks:
     - name: Import service parameters
-      include_vars: services.yaml
+      include_vars: services.json
     
     - name: Import node specific parameters
       include_vars: nodes.yaml

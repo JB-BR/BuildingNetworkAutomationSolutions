@@ -33,7 +33,7 @@ set security ipsec vpn VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_v
 
 # Traffis Selectors
 {# Outer "for": #}
-{# Loop For each remote network... #}
+{# For each remote network... #}
 {% for remote_network in service_ipsec_vpn.p2.customer_networks %}
 
 {# Inner "for": #}
@@ -43,4 +43,4 @@ set security ipsec vpn VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_v
 {% if ts_id.append(ts_id.pop() + 1) %}{% endif %}{# Increment the ts_id by 1 #}
 {% endfor %}{# End the inner "for" #}
 {% endfor %}{# End the outer "for" #}
-{% endif %}
+{% endif %}{# End the traffic selector creation #}
