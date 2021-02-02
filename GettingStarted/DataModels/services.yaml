@@ -1,7 +1,7 @@
 # Service model
 # Data Model for one IPSEC Site-to-site VPN Service
-# Change Request: The Change Request ID used by the customer to order a site-to-site VPN
-# Name: The customer name
+# Change Request: The Change Request ID used by the site_a to order a site-to-site VPN
+# Name: The site_a name
 
 # Universal Tunnel: When set to true, the VPN will only have one SA with 0.0.0.0/0 as traffic selector. Can be used for specific route-based VPNs. 
 
@@ -9,7 +9,7 @@
 service_ipsec_vpn:
   customer_name: TEST
   change_request: 123456789
-  customer_site: Point Nemo
+  site_a: Point Nemo
   customer_contact: John Doe
   customer_email: john.doe@customer.com
   customer_phone: +49 1234 56 789
@@ -17,8 +17,8 @@ service_ipsec_vpn:
   psk: uqgdsbiugUFQUZG7
 
   gw:
-    customer_ip: 20.52.47.68
-    provider_ip: 20.53.120.4
+    site_a_ip: 20.52.47.68
+    site_b_ip: 20.53.120.4
 
   p1:
     ike_version: 1
@@ -35,10 +35,10 @@ service_ipsec_vpn:
     integrity: sha1
     renegociation_time: 3600
     universal_tunnel: false
-    customer_networks:
+    site_a_networks:
       - 10.0.1.0/24
       - 10.0.12.0/24
       - 172.25.16.0/24
-    provider_networks:
+    site_b_networks:
       - 32.32.32.32/32
       - 32.124.124.0/26

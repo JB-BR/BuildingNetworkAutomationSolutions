@@ -18,7 +18,7 @@ set interfaces st0 unit {{my_firewall_hostname.tunnel_interface_number}} descrip
 # Phase 1
 set security ike proposal P1-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} authentication-method pre-shared-keys dh-group group{{service_ipsec_vpn.p1.dh_group}} authentication-algorithm {{service_ipsec_vpn.p1.integrity}} encryption-algorithm {{service_ipsec_vpn.p1.encryption}} lifetime-seconds {{service_ipsec_vpn.p1.renegociation_time}}
 set security ike policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} mode main proposals P1-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} pre-shared-key ascii-text {{service_ipsec_vpn.psk}}
-set security ike gateway GW-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} ike-policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} address {{service_ipsec_vpn.gw.customer_ip}} external-interface reth1.{{my_firewall_hostname.external_interface_number}} version {{service_ipsec_vpn.p1.ike_version}}
+set security ike gateway GW-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} ike-policy VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} address {{service_ipsec_vpn.gw.site_a_ip}} external-interface reth1.{{my_firewall_hostname.external_interface_number}} version {{service_ipsec_vpn.p1.ike_version}}
 
 # Phase 2
 set security ipsec proposal P2-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} protocol esp authentication-algorithm {{service_ipsec_vpn.p2.integrity}} encryption-algorithm {{service_ipsec_vpn.p2.encryption}} lifetime-seconds {{service_ipsec_vpn.p2.renegociation_time}}
@@ -34,11 +34,11 @@ set security ipsec vpn VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_v
 # Traffis Selectors
 {# Outer "for": #}
 {# For each remote network... #}
-{% for remote_network in service_ipsec_vpn.p2.customer_networks %}
+{% for remote_network in service_ipsec_vpn.p2.site_a_networks %}
 
 {# Inner "for": #}
 {# ... create a traffic selector with each local network #}
-{% for local_network in service_ipsec_vpn.p2.provider_networks %}
+{% for local_network in service_ipsec_vpn.p2.site_b_networks %}
 set security ipsec vpn VPN-{{service_ipsec_vpn.customer_name}}-{{service_ipsec_vpn.change_request}} traffic-selector TS{{ts_id[0]}} remote-ip {{remote_network}} local-ip {{local_network}}
 {% if ts_id.append(ts_id.pop() + 1) %}{% endif %}{# Increment the ts_id by 1 #}
 {% endfor %}{# End the inner "for" #}

@@ -2,14 +2,14 @@
 	"service_ipsec_vpn": {
 		"customer_name": "TEST",
 		"change_request": 123456789,
-		"customer_site": "Point Nemo",
+		"site_a": "Point Nemo",
 		"customer_contact": "John Doe",
-		"customer_email": "john.doe@customer.com",
+		"customer_email": "john.doe@site_a.com",
 		"customer_phone": "+49 1234 56 789",
 		"psk": "uqgdsbiugUFQUZG7",
 		"gw": {
-			"customer_ip": "20.52.47.68",
-			"provider_ip": "20.53.120.4"
+			"site_a_ip": "20.52.47.68",
+			"site_b_ip": "20.53.120.4"
 		},
 		"p1": {
 			"ike_version": 1,
@@ -26,12 +26,12 @@
 			"integrity": "hmac-sha1-96",
 			"renegociation_time": 3600,
 			"universal_tunnel": false,
-			"customer_networks": [
+			"site_a_networks": [
 				"10.0.1.0/24",
 				"10.0.12.0/24",
 				"172.25.16.0/24"
 			],
-			"provider_networks": [
+			"site_b_networks": [
 				"192.168.168.168/32",
 				"192.168.192.0/26"
 			]
