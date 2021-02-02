@@ -3,7 +3,9 @@
   gather_facts: false
   tasks:
     - name: Import service parameters
-      include_vars: services.json
+      include_vars: 
+        - file: services.yaml
+        - name: service_ipsec_vpn
 
     - name: Import node specific parameters
       include_vars: nodes.yaml

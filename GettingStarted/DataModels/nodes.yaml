@@ -1,4 +1,10 @@
 # Node-specific parameters
-my_firewall_hostname:
-  tunnel_interface_number: 73
-  external_interface_number: 100
+site_a:
+  - device_type: junipersrx
+  - hostname: srx-1
+  - interface_tunnel: st0.73
+  - interface_external: reth1.100
+
+site_b:
+  - device_type: azurerm_vpn_gateway
+  - hostname: gw-1
