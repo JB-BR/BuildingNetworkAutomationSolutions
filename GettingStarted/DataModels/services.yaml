@@ -10,18 +10,14 @@ customer_name: TEST
 change_request: 123456789
 
 provider_managed:
-  - site_a: true
-  - site_b: false
+  site_a: true
+  site_b: true
 
 # Technical Information
 # ---
 # Most of the parameters should be self explaining, the only exotic one being:  
 # universal_tunnel: When set to true, the VPN will only have one SA with 0.0.0.0/0 as traffic selector. Can be used for specific route-based VPNs.  
 psk: uqgdsbiugUFQUZG7
-
-gw_ip:
-  site_a: 20.52.47.68
-  site_b: 20.53.120.4
 
 p1:
   ike_version: 1

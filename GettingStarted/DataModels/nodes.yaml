@@ -1,10 +1,12 @@
 # Node-specific parameters
 site_a:
-  - device_type: junipersrx
-  - hostname: srx-1
-  - interface_tunnel: st0.73
-  - interface_external: reth1.100
+  device_type: junipersrx
+  hostname: srx-1
+  interface_tunnel: 73
+  interface_external: 100
+  ip: 1.1.1.1
 
 site_b:
-  - device_type: azurerm_vpn_gateway
-  - hostname: gw-1
+  device_type: azurerm_vpn_gateway
+  hostname: azuregw-1
+  ip: 2.2.2.2

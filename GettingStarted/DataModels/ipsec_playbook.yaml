@@ -3,15 +3,37 @@
   gather_facts: false
   tasks:
     - name: Import service parameters
-      include_vars: 
-        - file: services.yaml
-        - name: service_ipsec_vpn
+      include_vars:
+        file: services.yaml
+        name: services_vars
 
     - name: Import node specific parameters
-      include_vars: nodes.yaml
+      include_vars:
+        file: nodes.yaml
+        name: nodes_vars
 
-    - name: Create the configuration
+  # Site A
+    - name: Set the node specific parameters for site A
+      set_fact:
+        local_node_vars: "{{ nodes_vars.site_a }}"
+        remote_node_vars: "{{ nodes_vars.site_b }}"
+
+    - name: Create the configuration for the site A if is a managed site
       template:
-        src: s2s_vpn_template_for_juniper_srx.j2
-        dest: "{{ service_ipsec_vpn.customer_name }}.S2S_VPN.cfg"
+        src: "ipsec_{{ nodes_vars.site_a.device_type }}.j2"
+        dest: "{{ local_node_vars.hostname }}.{{ services_vars.customer_name }}.S2S_VPN.cfg"
         mode: u=rw,g=rw,o=r
+      when: services_vars.provider_managed.site_a
+
+  # Site B
+    - name: Set the node specific parameters for site B
+      set_fact:
+        local_node_vars: "{{ nodes_vars.site_b }}"
+        remote_node_vars: "{{ nodes_vars.site_a }}"
+
+    - name: Create the configuration for the site B if is a managed site
+      template:
+        src: "ipsec_{{ nodes_vars.site_b.device_type }}.j2"
+        dest: "{{ local_node_vars.hostname }}.{{ services_vars.customer_name }}.S2S_VPN.cfg"
+        mode: u=rw,g=rw,o=r
+      when: services_vars.provider_managed.site_b
