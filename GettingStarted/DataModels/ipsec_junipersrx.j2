@@ -10,15 +10,15 @@ set security policies from-zone SECURITYZONE-{{services_vars.customer_name}}-Tra
 set security policies from-zone SECURITYZONE-{{services_vars.customer_name}}-Transfer to-zone SECURITYZONE-{{services_vars.customer_name}}-VPN policy POLICY-{{services_vars.customer_name}}-Transfer2VPN then log session-close
 
 # Interface
-set routing-instances VRF-{{services_vars.customer_name}} interface st0.{{local_node_vars.interface_tunnel}}
-set security zones security-zone SECZN-{{services_vars.customer_name}}-VPN interfaces st0.{{local_node_vars.interface_tunnel}}
 set interfaces st0 unit {{local_node_vars.interface_tunnel}} family inet
 set interfaces st0 unit {{local_node_vars.interface_tunnel}} description VPN-{{services_vars.customer_name}}-{{services_vars.change_request}}
+set routing-instances VRF-{{services_vars.customer_name}} interface st0.{{local_node_vars.interface_tunnel}}
+set security zones security-zone SECZN-{{services_vars.customer_name}}-VPN interfaces st0.{{local_node_vars.interface_tunnel}}
 
 # Phase 1
 set security ike proposal P1-{{services_vars.customer_name}}-{{services_vars.change_request}} authentication-method pre-shared-keys dh-group group{{services_vars.p1.dh_group}} authentication-algorithm {{services_vars.p1.integrity}} encryption-algorithm {{services_vars.p1.encryption}} lifetime-seconds {{services_vars.p1.renegociation_time}}
 set security ike policy VPN-{{services_vars.customer_name}}-{{services_vars.change_request}} mode main proposals P1-{{services_vars.customer_name}}-{{services_vars.change_request}} pre-shared-key ascii-text {{services_vars.psk}}
-set security ike gateway GW-{{services_vars.customer_name}}-{{services_vars.change_request}} ike-policy VPN-{{services_vars.customer_name}}-{{services_vars.change_request}} address {{remote_node_vars.ip}} external-interface reth1.{{local_node_vars.interface_external}} version {{services_vars.p1.ike_version}}
+set security ike gateway GW-{{services_vars.customer_name}}-{{services_vars.change_request}} ike-policy VPN-{{services_vars.customer_name}}-{{services_vars.change_request}} address {{remote_node_vars.ip}} external-interface reth1.{{local_node_vars.interface_external}} local-address {{local_node_vars.ip}} version v{{services_vars.p1.ike_version}}-only
 
 # Phase 2
 set security ipsec proposal P2-{{services_vars.customer_name}}-{{services_vars.change_request}} protocol esp authentication-algorithm {{services_vars.p2.integrity}} encryption-algorithm {{services_vars.p2.encryption}} lifetime-seconds {{services_vars.p2.renegociation_time}}
