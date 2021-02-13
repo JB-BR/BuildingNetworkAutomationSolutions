@@ -1,4 +1,0 @@
-# Node-specific parameters
-srx-01:
-  tunnel_interface_number: 73
-  external_interface_number: 100
