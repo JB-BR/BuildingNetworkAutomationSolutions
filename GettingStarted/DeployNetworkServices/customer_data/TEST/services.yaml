@@ -1,0 +1,44 @@
+# Service model
+# Data Model for one IPSEC Site-to-site VPN Service
+# Change Request: The Change Request ID used by the customer to order a site-to-site VPN
+# Name: The customer name
+
+# Universal Tunnel: When set to true, the VPN will only have one SA with 0.0.0.0/0 as traffic selector. Can be used for specific route-based VPNs. 
+
+
+service_ipsec_vpn:
+  customer_name: TEST
+  change_request: 123456789
+  customer_site: Point Nemo
+  customer_contact: John Doe
+  customer_email: john.doe@customer.com
+  customer_phone: +49 1234 56 789
+
+  psk: uqgdsbiugUFQUZG7
+
+  gw:
+    a_side_ip: 20.52.47.68
+    z_side_ip: 20.53.120.4
+
+  p1:
+    ike_version: 1
+    dh_group: 2
+    encryption: aes-128-cbc
+    integrity: sha1
+    renegociation_time: 86400
+    adressive_mode: false
+
+  p2:
+    pfs: true
+    dh_group: 2
+    encryption: aes-128-cbc
+    integrity: sha1
+    renegociation_time: 3600
+    universal_tunnel: false
+    a_side_networks: 
+      - 10.0.1.0/24
+      - 10.0.12.0/24
+      - 172.25.16.0/24
+    z_side_networks:
+      - 32.32.32.32/32
+      - 32.124.124.0/26
