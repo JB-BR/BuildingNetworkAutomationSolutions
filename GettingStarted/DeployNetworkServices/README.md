@@ -26,3 +26,8 @@ Create an ansible script which generate the topology:
 - Push the base configuration to csrx-1, csrx-2 and arista-1
 - Push the IPSEC Service to csrx-1, csrx-2
 - Bonus : Test
+
+## Prepraration - create the vSRX VM
+Download the Hyper-V image and follow the instructions to create a base image for vSRX: 
+https://www.juniper.net/documentation/us/en/software/vsrx/vsrx-hyper-v/topics/task/security-vsrx-hyper-v-manager-deploying.html
+
