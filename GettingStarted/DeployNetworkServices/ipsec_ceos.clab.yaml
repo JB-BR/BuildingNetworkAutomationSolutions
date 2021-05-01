@@ -2,20 +2,30 @@ name: IPSEC-VPN
 
 topology:
   nodes:
-    site-a-gateway:
+    site_a_gateway:
       kind: ceos
       image: ceosimage:latest
-    site-a-client:
-      kind: linux
-      image: alpine:latest
-    site-b-gateway:
+      ports:
+        - 8001:443
+        - 2001:22
+    site_b_gateway:
       kind: ceos
       image: ceosimage:latest
-    site-b-client:
+      ports:
+        - 8002:443
+        - 2002:22
+    site_a_client:
       kind: linux
       image: alpine:latest
+      ports:
+        - 2003:22
+    site_b_client:
+      kind: linux
+      image: alpine:latest
+      ports:
+        - 2004:22
 
   links:
-    - endpoints: ["site-a-gateway:eth2", "site-b-gateway:eth2"]
-    - endpoints: ["site-a-gateway:eth1", "site-a-client:eth1"]
-    - endpoints: ["site-b-gateway:eth1", "site-b-client:eth1"]
+    - endpoints: ["site_a_gateway:eth2", "site_b_gateway:eth2"]
+    - endpoints: ["site_a_gateway:eth1", "site_a_client:eth1"]
+    - endpoints: ["site_b_gateway:eth1", "site_b_client:eth1"]
