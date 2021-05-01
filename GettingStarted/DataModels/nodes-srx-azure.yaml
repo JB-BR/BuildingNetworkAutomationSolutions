@@ -1,0 +1,12 @@
+# Node-specific parameters
+site_a:
+  device_type: junipersrx
+  hostname: srx-1
+  interface_tunnel: 73
+  interface_external: 100
+  ip: 1.1.1.1
+
+site_b:
+  device_type: azurerm_vpn_gateway
+  hostname: azuregw-1
+  ip: 2.2.2.2

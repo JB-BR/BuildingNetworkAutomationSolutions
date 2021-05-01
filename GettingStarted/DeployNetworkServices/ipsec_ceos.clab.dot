@@ -1,0 +1,9 @@
+graph ipsec_ceos {
+        siteagateway--sitebgateway[ color=black ];
+        siteagateway--siteaclient[ color=black ];
+        sitebgateway--sitebclient[ color=black ];
+        siteaclient [ shape=record color=black, fillcolor=gainsboro, label="Site-A-Client|{eth1 : 10.1.1.2/24}", style=filled ];
+        sitebclient [ shape=record color=black, fillcolor=gainsboro, label="Site-B-Client|{eth1 : 10.2.2.2/24}", style=filled ];
+        siteagateway [ shape=record color=black, fillcolor=deepskyblue, label="Site-A-Gateway|{eth1 : 10.1.1.1/24|eth2 : 1.1.1.1/30}", style=filled ];
+        sitebgateway [ shape=record color=black, fillcolor=deepskyblue, label="Site-B-Gateway|{eth1 : 10.2.2.1/24|eth2 : 2.2.2.2/30}", style=filled ];
+}

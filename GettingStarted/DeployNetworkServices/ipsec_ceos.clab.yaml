@@ -1,0 +1,21 @@
+name: IPSEC-VPN
+
+topology:
+  nodes:
+    site-a-gateway:
+      kind: ceos
+      image: ceosimage:latest
+    site-a-client:
+      kind: linux
+      image: alpine:latest
+    site-b-gateway:
+      kind: ceos
+      image: ceosimage:latest
+    site-b-client:
+      kind: linux
+      image: alpine:latest
+
+  links:
+    - endpoints: ["site-a-gateway:eth2", "site-b-gateway:eth2"]
+    - endpoints: ["site-a-gateway:eth1", "site-a-client:eth1"]
+    - endpoints: ["site-b-gateway:eth1", "site-b-client:eth1"]
