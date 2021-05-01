@@ -1,20 +1,6 @@
 ## Goal
 
-```
-          +-------+                   +-------+
-          |csrx-1 +-------------------+csrx-2 |
-          +-------+                   +-------+
-              |                          |
-              |                          |
-         +---------+                     |
-         |arista-1 |                     |
-         +---------+                     |
-         |         |                     |
-         |         |                     |
-    +-------+  +-------+             +-------+
-    |client1|  |client2|             |server |
-    +-------+  +-------+             +-------+
-```
+![DeployNetworkServices Topology](./topology.png)
 
 ## Todo 
 Create an ansible script which generate the topology:
@@ -27,7 +13,4 @@ Create an ansible script which generate the topology:
 - Push the IPSEC Service to csrx-1, csrx-2
 - Bonus : Test
 
-## Prepraration - create the vSRX VM
-Download the Hyper-V image and follow the instructions to create a base image for vSRX: 
-https://www.juniper.net/documentation/us/en/software/vsrx/vsrx-hyper-v/topics/task/security-vsrx-hyper-v-manager-deploying.html
-
+## Prepraration - initiate the topolgy using containerlab
