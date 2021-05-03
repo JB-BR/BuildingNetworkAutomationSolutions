@@ -2,11 +2,11 @@ ip security
   ike policy P1-{{services_vars.customer_name}}-{{services_vars.change_request}}
     integrity {{services_vars.p1.integrity}} 
     encryption {{services_vars.p1.encryption}} 
-    ike-lifetime {{services_vars.p1.renegociation_time / 60 / 60}}
+    ike-lifetime {{services_vars.p1.renegociation_time}}
     dh-group {{services_vars.p1.dh_group}}
 !
   sa policy P2-{{services_vars.customer_name}}-{{services_vars.change_request}} 
-    sa lifetime {{services_vars.p2.renegociation_time / 60 / 60}}
+    sa lifetime {{services_vars.p2.renegociation_time}}
     esp encryption {{services_vars.p2.encryption}} 
     esp integrity {{services_vars.p2.integrity}}
     pfs dh-group {{services_vars.p2.dh_group}}
@@ -19,7 +19,7 @@ ip security
     ! the local ipsec gateway will always try ro activate the tunnel
     connection start
 !
-vrf definition VRF-{{services_vars.customer_name}}
+vrf instance VRF-{{services_vars.customer_name}}
 !
 interface ethernet {{local_node_vars.interface_external}} 
   no switchport
@@ -30,8 +30,6 @@ interface tunnel {{local_node_vars.interface_tunnel}}
   mtu 9192
   tunnel mode ipsec 
   tunnel ipsec profile VPN-{{services_vars.customer_name}}-{{services_vars.change_request}}
-  tcp mss ceiling ipv4 1380 egress 
-  tcp mss ceiling ipv6 1380 egress
   ! Optional - VRF support: 
   ! tunnel ipsec profile vrouter
   ! vrf forwarding VRF-{{services_vars.customer_name}}

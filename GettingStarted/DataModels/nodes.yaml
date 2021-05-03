@@ -3,10 +3,12 @@ site_a:
   device_type: aristaceos
   hostname: siteagateway
   interface_tunnel: 73
+  interface_external: 2
   ip: 1.1.1.1
 
 site_b:
   device_type: aristaceos
   hostname: sitebgateway
   interface_tunnel: 2
+  interface_external: 2
   ip: 1.1.1.2
