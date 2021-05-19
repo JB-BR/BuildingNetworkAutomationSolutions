@@ -1,9 +1,13 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-aristaceos = "cEOS64-lab-4.24.2.1F.tar.xz"
+aristaceos = "cEOS-lab-4.26.0.1F.tar.xz"
 
 $shellscript = <<-SHELL
+
+     echo "\n\nSet the DNS Server to 1.1.1.1..."
+     sudo sed -i "s/^nameserver.*/nameserver 1.1.1.1/" /etc/resolv.conf
+
      echo "\n\nUpdate Linux..."
      sudo apt-get --assume-yes update
 

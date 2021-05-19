@@ -5,25 +5,15 @@ topology:
     site_a_gateway:
       kind: ceos
       image: ceosimage:latest
-      ports:
-        - 8001:443
-        - 2001:22
     site_b_gateway:
       kind: ceos
       image: ceosimage:latest
-      ports:
-        - 8002:443
-        - 2002:22
     site_a_client:
       kind: linux
       image: alpine:latest
-      ports:
-        - 2003:22
     site_b_client:
       kind: linux
       image: alpine:latest
-      ports:
-        - 2004:22
 
   links:
     - endpoints: ["site_a_gateway:eth2", "site_b_gateway:eth2"]
