@@ -25,6 +25,11 @@ $shellscript = <<-SHELL
 
      echo "\n\nInstall PIP..."
      sudo apt-get --assume-yes install python3-pip
+     python3 -m pip install -U pip
+
+     echo "\n\nInstall Ansible and Paramiko..."
+     pip3 install ansible
+     pip3 install paramiko
 
      echo "\n\nInstall JMES Path to parse JSON data..."
      sudo apt install python3-jmespath

@@ -4,67 +4,18 @@
 
 ## Todo 
 Create an ansible script which generate the topology:
-- Create the csrx-1, csrx-2 and arista-1 and publish their SSH Ports
-- Create the ansible inventory file for the csrx-1, csrx-2 and arista-1
-- Create one docker network bridge per connection
-- Attache the bridges to csrx-1, csrx-2 and arista-1
-- Create the two client containers and the server and attach them to the correponding briges
+[x] Create the csrx-1, csrx-2 and arista-1 and publish their SSH Ports (Done with containerlab)
+[x] Create the ansible inventory file for the csrx-1, csrx-2 and arista-1 (Done with containerlab)
+[x] Create one docker network bridge per connection (Done with containerlab)
+[x] Attache the bridges to csrx-1, csrx-2 and arista-1 (Done with containerlab)
+[x] Create the two client containers and the server and attach them to the correponding briges (Done with containerlab)
 - Push the base configuration to csrx-1, csrx-2 and arista-1
 - Push the IPSEC Service to csrx-1, csrx-2
 - Bonus : Test
 
-## Prepraration - add a username and password to the arista docker image
-
-Start an instance based on Arista cEOS and start the shell:
-```
-cd /vagrant_data/containers/arista-ceos
-docker-compose up -d
-docker exec -it aristaceos_ceos-1_1 /bin/bash
-```
-
-Edit the configuration: Add a user, and enable SSH as well as the eAPI, the save the config and leave the container:
-```
-Cli
-enable
-configure terminal
-username admin secret admin privilege 15 role network-admin
-management api http-commands
-no shutdown
-management ssh
-username admin
-end
-write
-exit
-exit
-```
-
-Using the Container ID, create a new docker image based:
-
-```
-vagrant@ubuntu-18:/vagrant_data/containers/arista-ceos$ docker ps -a
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
-5ac4fa5380c8        ceosimage:latest    "/sbin/init systemd.…"   2 minutes ago       Up 2 minutes                            aristaceos_ceos-1_1
-vagrant@ubuntu-18:/vagrant_data/containers/arista-ceos$ docker commit 5ac4fa5380c8
-sha256:c267b77d94eb7101257aee4df1445d77b8be64d3b542039d7dc8dc57e5a76b97
-vagrant@ubuntu-18:/vagrant_data/containers/arista-ceos$ docker image ls
-REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-<none>              <none>              c267b77d94eb        5 seconds ago       1.78GB
-ceosimage           latest              af597e1e05b1        2 weeks ago         1.77GB
-```
-
-Replace ceosimage:latest with your new image:
-```
-vagrant@ubuntu-18:/vagrant_data/containers/arista-ceos$ docker tag c267b77d94eb ceosimage:latest
-vagrant@ubuntu-18:/vagrant_data/containers/arista-ceos$ docker image ls
-REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-ceos                latest              c267b77d94eb        2 minutes ago       1.78GB
-ceosimage           latest              c267b77d94eb        2 minutes ago       1.78GB
-```
-
-
 ## Initiate the topolgy using containerlab
 
-Containerlab will generate temporary files in the current directory. Make sur that you are in a writeable directory (/vagarnt_data will not work)
+Containerlab will generate temporary files in the current directory. Make sur that you are in a writeable directory (/vagrant_data might not work)
 ```
 vagrant@ubuntu-18:~$ pwd
 /home/vagrant
@@ -97,10 +48,40 @@ INFO[0007] Writing /etc/hosts file
 
 vagrant@ubuntu-18:~$ docker ps -a
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                         NAMES
-fbc5badc3a99        ceosimage:latest    "/sbin/init systemd.…"   15 seconds ago      Up 8 seconds        0.0.0.0:2001->22/tcp, 0.0.0.0:8001->443/tcp   clab-IPSEC-VPN-site_a_gateway
-ed3099e21370        ceosimage:latest    "/sbin/init systemd.…"   15 seconds ago      Up 9 seconds        0.0.0.0:2002->22/tcp, 0.0.0.0:8002->443/tcp   clab-IPSEC-VPN-site_b_gateway
-c8825c7c3735        alpine:latest       "/bin/sh"                15 seconds ago      Up 12 seconds       0.0.0.0:2004->22/tcp                          clab-IPSEC-VPN-site_b_client
-15d563310d61        alpine:latest       "/bin/sh"                15 seconds ago      Up 10 seconds       0.0.0.0:2003->22/tcp                          clab-IPSEC-VPN-site_a_client
+fbc5badc3a99        ceosimage:latest    "/sbin/init systemd.…"   15 seconds ago      Up 8 seconds                                                      clab-IPSEC-VPN-site_a_gateway
+ed3099e21370        ceosimage:latest    "/sbin/init systemd.…"   15 seconds ago      Up 9 seconds                                                      clab-IPSEC-VPN-site_b_gateway
+c8825c7c3735        alpine:latest       "/bin/sh"                15 seconds ago      Up 12 seconds                                                     clab-IPSEC-VPN-site_b_client
+15d563310d61        alpine:latest       "/bin/sh"                15 seconds ago      Up 10 seconds                                                     clab-IPSEC-VPN-site_a_client
 ```
 
-Test the SSH access to the devices: 
+Test the SSH access to the arista cEOS devices. 
+Note: it usually takes two minutes for the arista cEOS to boot-up, you can verify the logs with the command "docker logs clab-IPSEC-VPN-site_a_gateway".
+```
+vagrant@ubuntu-18:~$ ssh admin@clab-IPSEC-VPN-site_a_gateway
+The authenticity of host 'clab-ipsec-vpn-site_a_gateway (2001:172:20:20::2)' can't be established.
+ECDSA key fingerprint is SHA256:ulSKvFQNWLDWurYXVKkPENWtxZ4qNupqNWMuJNHv84k.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'clab-ipsec-vpn-site_a_gateway,2001:172:20:20::2' (ECDSA) to the list of known hosts.
+Password:
+site_a_gateway>enable
+site_a_gateway#
+```
+
+Test the shell access to the alpine linux clients
+Note 1 : OpenSSH is not installed on the conatiner
+Note 2 : Only the bourne shell (/bin/sh), is available. The bourne again shell (/bin/bash) ist not installed
+
+```
+docker exec -it clab-IPSEC-VPN-site_b_client /bin/sh
+/ #
+/ #
+/ # ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+6: eth0@if7: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP
+    link/ether 02:42:ac:14:14:02 brd ff:ff:ff:ff:ff:ff
+14: eth1@if15: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 65000 qdisc noqueue state UP
+    link/ether aa:c1:ab:2b:a4:2a brd ff:ff:ff:ff:ff:ff
+```
+
+

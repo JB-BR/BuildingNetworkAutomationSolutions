@@ -1,0 +1,36 @@
+---
+- name: Run commands on site_a_gateway and set the base IP config
+  hosts: clab-IPSEC-VPN-site_a_gateway
+  gather_facts: false
+
+  tasks:
+    - name: Configure clab-IPSEC-VPN-site_a_gateway
+      arista.eos.eos_command:
+        commands:
+          - "enable"
+          - "configure terminal"
+          - "interface Ethernet1"
+          - "   no switchport"
+          - "   ip address 192.168.1.1/24"
+          - "interface Ethernet2"
+          - "   no switchport"
+          - "   ip address 100.64.1.1/30"
+          - "ip routing"
+
+- name: Run commands on site_b_gateway and set the base IP config
+  hosts: clab-IPSEC-VPN-site_b_gateway
+  gather_facts: false
+
+  tasks:
+    - name: Configure clab-IPSEC-VPN-site_b_gateway
+      arista.eos.eos_command:
+        commands:
+          - "enable"
+          - "configure terminal"
+          - "interface Ethernet1"
+          - "   no switchport"
+          - "   ip address 192.168.2.1/24"
+          - "interface Ethernet2"
+          - "   no switchport"
+          - "   ip address 100.64.1.2/30"
+          - "ip routing"
