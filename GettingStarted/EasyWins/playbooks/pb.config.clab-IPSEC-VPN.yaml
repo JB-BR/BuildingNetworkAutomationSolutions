@@ -34,3 +34,15 @@
           - "   no switchport"
           - "   ip address 100.64.1.2/30"
           - "ip routing"
+
+- name: Run commands on site_a_gateway and verify that both site_a_client and site_b_gateway are not reachable
+  hosts: clab-IPSEC-VPN-site_a_gateway
+  gather_facts: false
+
+  tasks:
+    - name: Ping site_a_client
+      arista.eos.eos_command:
+      commands: ping 100.64.1.2
+      provider:
+        transport: eapi
+    - debug: var=ping.stdout[0]
