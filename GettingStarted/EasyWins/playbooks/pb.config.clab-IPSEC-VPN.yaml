@@ -1,4 +1,5 @@
 ---
+################################################### TO CONSOLIDATE in ONE TASK ########################################################
 - name: Run commands on site_a_gateway and set the base IP config
   hosts: clab-IPSEC-VPN-site_a_gateway
   gather_facts: false
@@ -11,10 +12,10 @@
           - "configure terminal"
           - "interface Ethernet1"
           - "   no switchport"
-          - "   ip address 192.168.1.1/24"
+          - "   ip address {{ '192.168.1.0' | ipmath(1) }}/24" #Site_a_gateway has the first IP adress in the client network
           - "interface Ethernet2"
           - "   no switchport"
-          - "   ip address 100.64.1.1/30"
+          - "   ip address {{ '100.64.1.0' | ipmath(1) }}/30" #Site_a_gateway has the first IP adress in the internet network
           - "ip routing"
 
 - name: Run commands on site_b_gateway and set the base IP config
@@ -29,25 +30,50 @@
           - "configure terminal"
           - "interface Ethernet1"
           - "   no switchport"
-          - "   ip address 192.168.2.1/24"
+          - "   ip address {{ '192.168.2.0' | ipmath(1) }}/24" #Site_b_gateway has the first IP adress in the client network
           - "interface Ethernet2"
           - "   no switchport"
-          - "   ip address 100.64.1.2/30"
+          - "   ip address {{ '100.64.1.0' | ipmath(2) }}/30" #Site_b_gateway has the second IP adress in the internet network
           - "ip routing"
 
+################################################### TO CONSOLIDATE in ONE TASK ########################################################
 - name: Run commands on site_a_gateway and verify that both site_a_client and site_b_gateway are not reachable
   hosts: clab-IPSEC-VPN-site_a_gateway
   gather_facts: false
 
   tasks:
-    - name: Ping site_b_gateway
+    - name: Ping site_a_client
       eos_command:
-        commands: "ping 100.64.1.2"
+        commands: "ping 192.168.1.2"
       register: ip_reachability_state
 
-    - name: Verfify that site_b_client is reachable
+    - name: Verify that site_a_client is reachable
       assert:
         that:
           - ip_reachability_state.stdout[0] | regex_search('[1-5] received')  # A default ping request on arista sends 5 pings, thus we verify that a least 1 ping of of 5 has been received
         success_msg: "Ping test successful - A least one ping reply has been received"
         fail_msg: "Ping test failed - please verify manually"
+
+    - name: Ping site_b_gateway
+      eos_command:
+        commands: "ping 100.64.1.2"
+      register: ip_reachability_state
+
+    - name: Verify that site_b_gateway is reachable
+      assert:
+        that:
+          - ip_reachability_state.stdout[0] | regex_search('[1-5] received')  # A default ping request on arista sends 5 pings, thus we verify that a least 1 ping of of 5 has been received
+        success_msg: "Ping test successful - A least one ping reply has been received"
+        fail_msg: "Ping test failed - please verify manually"
+        
+    - name: Ping site_b_client
+      eos_command:
+        commands: "ping 192.168.2.2"
+      register: ip_reachability_state
+
+    - name: Verify that site_b_client is NOT reachable
+      assert:
+        that:
+          - ip_reachability_state.stdout[0] | regex_search('0 received')  # A default ping request on arista sends 5 pings, thus we verify that a least 1 ping of of 5 has been received
+        success_msg: "Ping test failed as expected - No ping reply has been received"
+        fail_msg: "Ping test successed, something wrong - please verify manually"

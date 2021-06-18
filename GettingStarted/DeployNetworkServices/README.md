@@ -9,6 +9,7 @@ Create an ansible script which generate the topology:
 [x] Create one docker network bridge per connection (Done with containerlab)
 [x] Attache the bridges to csrx-1, csrx-2 and arista-1 (Done with containerlab)
 [x] Create the two client containers and the server and attach them to the correponding briges (Done with containerlab)
+- Create a ip_reachability.yml and ip_unreachability.yml and call them in the main script
 - Configure the clients
 - Configure the VPN gateway with abase config
 - Test that all point to point links can ping

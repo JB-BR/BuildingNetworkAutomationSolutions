@@ -1,0 +1,17 @@
+#### Configure the docker clients on time to workaround the fact that alpine linux does not ship with SSH and I did not install it so far
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Set Client A IP Address 
+      shell: |
+        docker exec -i clab-IPSEC-VPN-site_a_client /bin/sh -c "ip addr add 192.168.1.2/24 dev eth1"
+    - name: Set Client A route to client B
+      shell: |
+        docker exec -i clab-IPSEC-VPN-site_a_client /bin/sh -c "ip route add 192.168.2.0/24 via 192.168.1.1"
+    - name: Set Client B IP Address 
+      shell: |
+        docker exec -i clab-IPSEC-VPN-site_b_client /bin/sh -c "ip addr add 192.168.2.2/24 dev eth1"
+    - name: Set Client B route to client A
+      shell: |
+        docker exec -i clab-IPSEC-VPN-site_b_client /bin/sh -c "ip route add 192.168.1.0/24 via 192.168.2.1"
