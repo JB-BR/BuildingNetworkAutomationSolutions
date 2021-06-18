@@ -40,9 +40,14 @@
   gather_facts: false
 
   tasks:
-    - name: Ping site_a_client
-      arista.eos.eos_command:
-      commands: ping 100.64.1.2
-      provider:
-        transport: eapi
-    - debug: var=ping.stdout[0]
+    - name: Ping site_b_gateway
+      eos_command:
+        commands: "ping 100.64.1.2"
+      register: ip_reachability_state
+
+    - name: Verfify that site_b_client is reachable
+      assert:
+        that:
+          - ip_reachability_state.stdout[0] | regex_search('[1-5] received')  # A default ping request on arista sends 5 pings, thus we verify that a least 1 ping of of 5 has been received
+        success_msg: "Ping test successful - A least one ping reply has been received"
+        fail_msg: "Ping test failed - please verify manually"
