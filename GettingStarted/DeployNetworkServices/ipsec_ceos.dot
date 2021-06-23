@@ -7,45 +7,44 @@ graph ipsec_ceos {
 		  site_a_gateway site_b_gateway
 	    }
 	    
-	    { edge [ color=black, label="IPSEC"]
+	    { edge [ color=black]
 	      site_a_gateway -- site_b_gateway
 	    }
 	    
 	    { edge [ color=blue ]
 	      site_a_gateway -- site_a_client
 	      site_b_gateway -- site_b_client
-	      
 	    }
 	    
 	    site_a_gateway [label=<
         <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
             <TR><TD>site_a_gateway</TD></TR>
-            <TR><TD>Eth1 - LAN - </TD></TR>
-            <TR><TD>Eth2 - WAN - </TD></TR>
-            <TR><TD>LoXY - VTI - </TD></TR>
+            <TR><TD>Ethernet1 - LAN - 192.168.2.1/24 </TD></TR>
+            <TR><TD>Ethernet2 - WAN - 100.64.1.1/30</TD></TR>
+            <TR><TD>LoXY - VTI - TBD</TD></TR>
         </TABLE>>
         ];
 
 	    site_b_gateway [label=<
         <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
             <TR><TD>site_a_gateway</TD></TR>
-            <TR><TD>Eth1 - LAN - </TD></TR>
-            <TR><TD>Eth2 - WAN - </TD></TR>
-            <TR><TD>LoXY - VTI - </TD></TR>
+            <TR><TD>Ethernet1 - LAN - 192.168.2.1/24</TD></TR>
+            <TR><TD>Ethernet2 - WAN -  100.64.1.2/30</TD></TR>
+            <TR><TD>LoXY - VTI - TBD</TD></TR>
         </TABLE>>
         ];
         
         site_a_client [label=<
         <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
             <TR><TD>site_a_client</TD></TR>
-            <TR><TD>Eth1 - LAN - </TD></TR>
+            <TR><TD>eth1 - LAN - 192.168.1.2/24</TD></TR>
         </TABLE>>
         ];
 
         site_b_client [label=<
         <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
             <TR><TD>site_b_client</TD></TR>
-            <TR><TD>Eth1 - LAN - </TD></TR>
+            <TR><TD>eth1 - LAN - 192.168.2.2/24</TD></TR>
         </TABLE>>
         ];
 }
