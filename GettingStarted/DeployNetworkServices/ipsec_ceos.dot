@@ -1,0 +1,51 @@
+graph ipsec_ceos {
+        { node [shape=rectangle, style=filled, color=cornflowerblue, fillcolor=aliceblue]
+		  site_a_client site_b_client
+	    }
+	    
+	    { node [shape=rectangle, style=filled, color=black, fillcolor=darkviolet]
+		  site_a_gateway site_b_gateway
+	    }
+	    
+	    { edge [ color=black, label="IPSEC"]
+	      site_a_gateway -- site_b_gateway
+	    }
+	    
+	    { edge [ color=blue ]
+	      site_a_gateway -- site_a_client
+	      site_b_gateway -- site_b_client
+	      
+	    }
+	    
+	    site_a_gateway [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD>site_a_gateway</TD></TR>
+            <TR><TD>Eth1 - LAN - </TD></TR>
+            <TR><TD>Eth2 - WAN - </TD></TR>
+            <TR><TD>LoXY - VTI - </TD></TR>
+        </TABLE>>
+        ];
+
+	    site_b_gateway [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD>site_a_gateway</TD></TR>
+            <TR><TD>Eth1 - LAN - </TD></TR>
+            <TR><TD>Eth2 - WAN - </TD></TR>
+            <TR><TD>LoXY - VTI - </TD></TR>
+        </TABLE>>
+        ];
+        
+        site_a_client [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD>site_a_client</TD></TR>
+            <TR><TD>Eth1 - LAN - </TD></TR>
+        </TABLE>>
+        ];
+
+        site_b_client [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD>site_b_client</TD></TR>
+            <TR><TD>Eth1 - LAN - </TD></TR>
+        </TABLE>>
+        ];
+}
