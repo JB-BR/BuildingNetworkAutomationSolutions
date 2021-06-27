@@ -7,6 +7,9 @@ RUN apk --update add --no-cache openssh bash \
   && echo "root:root" | chpasswd \
   && rm -rf /var/cache/apk/* \
   && sed -ie 's/#Port 22/Port 22/g' /etc/ssh/sshd_config \
+  && sed -ie 's/#AddressFamily any/AddressFamily any/g' /etc/ssh/sshd_config \
+  && sed -ie 's/#ListenAddress 0.0.0.0/ListenAddress 0.0.0.0/g' /etc/ssh/sshd_config \
+  && sed -ie 's/#ListenAddress ::/ListenAddress ::/g' /etc/ssh/sshd_config \
   && sed -ri 's/#HostKey \/etc\/ssh\/ssh_host_key/HostKey \/etc\/ssh\/ssh_host_key/g' /etc/ssh/sshd_config \
   && sed -ir 's/#HostKey \/etc\/ssh\/ssh_host_rsa_key/HostKey \/etc\/ssh\/ssh_host_rsa_key/g' /etc/ssh/sshd_config \
   && sed -ir 's/#HostKey \/etc\/ssh\/ssh_host_dsa_key/HostKey \/etc\/ssh\/ssh_host_dsa_key/g' /etc/ssh/sshd_config \
