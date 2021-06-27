@@ -10,10 +10,10 @@ topology:
       image: ceosimage:latest
     site_a_client:
       kind: linux
-      image: alpine:latest
+      image: alpine-ssh:latest
     site_b_client:
       kind: linux
-      image: alpine:latest
+      image: alpine-ssh:latest
 
   links:
     - endpoints: ["site_a_gateway:eth2", "site_b_gateway:eth2"]
