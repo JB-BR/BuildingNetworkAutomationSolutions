@@ -17,6 +17,15 @@ Create an ansible script which generate the topology:
 - Push the IPSEC Service to csrx-1, csrx-2
 - Test that both clients can ping and display the path through a traceroute
 
+## Create an alpine container with SSH
+Per default, alpine does not come with OpenSSH installed.
+We will create a docker image containing OpenSSH, with root login activated (login: root / password: root).
+Source: https://github.com/oadiazm/alpine-ssh/
+
+```
+docker build -t alpine-ssh /vagrant_data/containers/alpine-ssh/
+```
+
 ## Initiate the topolgy using containerlab
 
 Containerlab will generate temporary files in the current directory. Make sur that you are in a writeable directory (/vagrant_data might not work)
@@ -72,8 +81,7 @@ site_a_gateway#
 ```
 
 Test the shell access to the alpine linux clients
-Note 1 : OpenSSH is not installed on the conatiner
-Note 2 : Only the bourne shell (/bin/sh), is available. The bourne again shell (/bin/bash) ist not installed
+Note : Only the bourne shell (/bin/sh), is available. The bourne again shell (/bin/bash) ist not installed
 
 ```
 docker exec -it clab-IPSEC-VPN-site_b_client /bin/sh
