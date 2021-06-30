@@ -36,16 +36,18 @@
           - "   ip address {{ '100.64.1.0' | ipmath(2) }}/30" #Site_b_gateway has the second IP adress in the internet network
           - "ip routing"
 
+################################################### TO CONSOLIDATE in ONE TASK ########################################################
+# Note : we use the "raw" module because Alpine Linux does not ship with Python and thus does not support Ansible buitlin commands
 - name: Run commands on site_a_client and set the base IP config
   hosts: clab-IPSEC-VPN-site_a_client
   gather_facts: false
 
   tasks:
     - name: Configure eth1 IP on clab-IPSEC-VPN-site_a_client
-      ansible.builtin.command: ip addr add {{ '192.168.1.0' | ipmath(2) }}/24 dev eth1
+      raw: "ip addr add {{ '192.168.1.0' | ipmath(2) }}/24 dev eth1"
 
     - name: Configure the route to site B on clab-IPSEC-VPN-site_a_client
-      ansible.builtin.command: ip route add 192.168.2.0/24 via {{ '192.168.1.0' | ipmath(1) }}
+      raw: "ip route add 192.168.2.0/24 via {{ '192.168.1.0' | ipmath(1) }}"
 
 - name: Run commands on site_b_client and set the base IP config
   hosts: clab-IPSEC-VPN-site_b_client
@@ -53,12 +55,11 @@
 
   tasks:
     - name: Configure eth1 IP on clab-IPSEC-VPN-site_a_client
-      ansible.builtin.command: ip addr add {{ '192.168.2.0' | ipmath(2) }}/24 dev eth1
+      raw: "ip addr add {{ '192.168.2.0' | ipmath(2) }}/24 dev eth1"
 
     - name: Configure the route to site B on clab-IPSEC-VPN-site_a_client
-      ansible.builtin.command: ip route add 192.168.1.0/24 via {{ '192.168.2.0' | ipmath(1) }}
+      raw: "ip route add 192.168.1.0/24 via {{ '192.168.2.0' | ipmath(1) }}"
 
-################################################### TO CONSOLIDATE in ONE TASK ########################################################
 - name: Run commands on site_a_gateway and verify that both site_a_client and site_b_gateway are not reachable
   hosts: clab-IPSEC-VPN-site_a_gateway
   gather_facts: false

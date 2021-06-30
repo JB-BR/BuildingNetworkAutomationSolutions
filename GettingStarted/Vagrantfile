@@ -35,6 +35,9 @@ $shellscript = <<-SHELL
      echo "\n\nInstall JMES Path to parse JSON data..."
      sudo apt install python3-jmespath
 
+     echo "\n\nInstall SSHPASS - to use the 'ssh' connection type with passwords, Ansible needs sshpass..."
+     sudo apt-get --assume-yes install sshpass
+
      echo "\n\nInstall the latest Containerlab release"
      sudo bash -c "$(curl -sL https://get-clab.srlinux.dev)"
   SHELL
