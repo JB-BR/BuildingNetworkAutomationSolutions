@@ -23,7 +23,7 @@ vrf instance VRF-{{services_vars.customer_name}}
 !
 interface ethernet {{local_node_vars.interface_external}} 
   no switchport
-  ip address 1.0.0.1/24
+  ip address {{local_node_vars.ip}}
 !
 !
 interface tunnel {{local_node_vars.interface_tunnel}}

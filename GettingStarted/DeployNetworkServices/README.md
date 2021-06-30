@@ -9,12 +9,12 @@ Create an ansible script which generate the topology:
 [x] Create one docker network bridge per connection (Done with containerlab)
 [x] Attache the bridges to csrx-1, csrx-2 and arista-1 (Done with containerlab)
 [x] Create the two client containers and the server and attach them to the correponding briges (Done with containerlab)
-- Create a ip_reachability.yml and ip_unreachability.yml and call them in the main script
-- Configure the clients
-- Configure the VPN gateway with abase config
-- Test that all point to point links can ping
-- Test that both client cannot ping
-- Push the IPSEC Service to csrx-1, csrx-2
+[o] Create a ip_reachability.yml and ip_unreachability.yml and call them in the main script
+[x] Configure the clients
+[x] Configure the VPN gateway with abase config
+[x] Test that all point to point links can ping
+[x] Test that both client cannot ping
+- Push the IPSEC Service to csrx-1, csrx-2 with an Ansible Playbook
 - Test that both clients can ping and display the path through a traceroute
 
 ## Create an alpine container with SSH

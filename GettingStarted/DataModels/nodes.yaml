@@ -4,11 +4,11 @@ site_a:
   hostname: siteagateway
   interface_tunnel: 73
   interface_external: 2
-  ip: 1.1.1.1
+  ip: 100.64.1.1
 
 site_b:
   device_type: aristaceos
   hostname: sitebgateway
-  interface_tunnel: 2
+  interface_tunnel: 123
   interface_external: 2
-  ip: 1.1.1.2
+  ip: 100.64.1.2
