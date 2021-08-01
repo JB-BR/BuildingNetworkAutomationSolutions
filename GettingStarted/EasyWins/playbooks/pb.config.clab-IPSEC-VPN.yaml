@@ -45,9 +45,12 @@
   tasks:
     - name: Configure eth1 IP on clab-IPSEC-VPN-site_a_client
       raw: "ip addr add {{ '192.168.1.0' | ipmath(2) }}/24 dev eth1"
+      ignore_errors: yes #"ip" will throw an error if the address has already been configure. This will happen if your run the playbook two time in a row
 
     - name: Configure the route to site B on clab-IPSEC-VPN-site_a_client
       raw: "ip route add 192.168.2.0/24 via {{ '192.168.1.0' | ipmath(1) }}"
+      register: ip_route_result
+      ignore_errors: yes #"ip" will throw an error if the address has already been configure. This will happen if your run the playbook two time in a row
 
 - name: Run commands on site_b_client and set the base IP config
   hosts: clab-IPSEC-VPN-site_b_client
@@ -56,10 +59,13 @@
   tasks:
     - name: Configure eth1 IP on clab-IPSEC-VPN-site_a_client
       raw: "ip addr add {{ '192.168.2.0' | ipmath(2) }}/24 dev eth1"
+      ignore_errors: yes #"ip" will throw an error if the address has already been configure. This will happen if your run the playbook two time in a row
 
     - name: Configure the route to site B on clab-IPSEC-VPN-site_a_client
       raw: "ip route add 192.168.1.0/24 via {{ '192.168.2.0' | ipmath(1) }}"
+      ignore_errors: yes #"ip" will throw an error if the address has already been configure. This will happen if your run the playbook two time in a row
 
+################################################### TEST THE INITIAL SETUP ########################################################
 - name: Run commands on site_a_gateway and verify that both site_a_client and site_b_gateway are not reachable
   hosts: clab-IPSEC-VPN-site_a_gateway
   gather_facts: false

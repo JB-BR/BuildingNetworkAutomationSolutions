@@ -72,7 +72,7 @@ c8825c7c3735        alpine:latest       "/bin/sh"                15 seconds ago 
 #### Test the SSH access to the arista cEOS devices
 Note: it usually takes two minutes for the arista cEOS to boot-up, you can verify the logs with the command "docker logs clab-IPSEC-VPN-site_a_gateway".
 ```
-vagrant@ubuntu-18:~$ ssh admin@clab-IPSEC-VPN-site_a_gateway
+vagrant@ubuntu-18:~$ c
 The authenticity of host 'clab-ipsec-vpn-site_a_gateway (2001:172:20:20::2)' can't be established.
 ECDSA key fingerprint is SHA256:ulSKvFQNWLDWurYXVKkPENWtxZ4qNupqNWMuJNHv84k.
 Are you sure you want to continue connecting (yes/no)? yes
@@ -155,3 +155,7 @@ all:
           ansible_ssh_pass: 'root'
 ```
 
+Run the Ansible Script: 
+```
+ansible-playbook -i clab-IPSEC-VPN/ansible-inventory.yml /vagrant_data/EasyWins/playbooks/pb.config.clab-IPSEC-VPN.yaml
+```
