@@ -14,7 +14,7 @@ Create an ansible script which generate the topology:
 [x] Configure the VPN gateway with abase config
 [x] Test that all point to point links can ping
 [x] Test that both client cannot ping
-- Push the IPSEC Service to csrx-1, csrx-2 with an Ansible Playbook
+- Push the IPSEC Service to csrx-1, csrx-2 with an Ansible Playbook - OPEN : Correct the aes-128-cbc synthax
 - Test that both clients can ping and display the path through a traceroute
 
 ## Create an alpine container with SSH
@@ -135,6 +135,8 @@ all:
           ansible_network_os: arista.eos.eos
           ansible_httpapi_use_ssl: true
           ansible_httpapi_validate_certs: false
+          ansible_become: yes
+          ansible_become_method: enable
         clab-IPSEC-VPN-site_b_gateway:
           ansible_host: 172.20.20.5
           ansible_user: 'admin'
@@ -143,6 +145,8 @@ all:
           ansible_network_os: arista.eos.eos
           ansible_httpapi_use_ssl: true
           ansible_httpapi_validate_certs: false
+          ansible_become: yes
+          ansible_become_method: enable
     linux:
       hosts:
         clab-IPSEC-VPN-site_a_client:

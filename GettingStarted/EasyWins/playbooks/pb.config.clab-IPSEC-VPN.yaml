@@ -1,5 +1,6 @@
 ---
-################################################### TO CONSOLIDATE in ONE TASK ########################################################
+################################################### STEP 1 - PREPARE THE VPN GATEWAYS WITH THE BASE CONFIG ############################
+################################################### TODO : TO CONSOLIDATE IN ONE SINGLE TASK ##########################################
 - name: Run commands on site_a_gateway and set the base IP config
   hosts: clab-IPSEC-VPN-site_a_gateway
   gather_facts: false
@@ -36,7 +37,8 @@
           - "   ip address {{ '100.64.1.0' | ipmath(2) }}/30" #Site_b_gateway has the second IP adress in the internet network
           - "ip routing"
 
-################################################### TO CONSOLIDATE in ONE TASK ########################################################
+################################################### STEP 2 - PREPARE THE CLIENTS WITH THE BASE CONFIG #################################
+################################################### TODO : TO CONSOLIDATE IN ONE SINGLE TASK ##########################################
 # Note : we use the "raw" module because Alpine Linux does not ship with Python and thus does not support Ansible buitlin commands
 - name: Run commands on site_a_client and set the base IP config
   hosts: clab-IPSEC-VPN-site_a_client
@@ -65,7 +67,7 @@
       raw: "ip route add 192.168.1.0/24 via {{ '192.168.2.0' | ipmath(1) }}"
       ignore_errors: yes #"ip" will throw an error if the address has already been configure. This will happen if your run the playbook two time in a row
 
-################################################### TEST THE INITIAL SETUP ########################################################
+################################################### STEP 3 - TEST THE INITIAL SETUP ###################################################
 - name: Run commands on site_a_gateway and verify that both site_a_client and site_b_gateway are not reachable
   hosts: clab-IPSEC-VPN-site_a_gateway
   gather_facts: false
@@ -106,3 +108,81 @@
           - ip_reachability_state.stdout[0] | regex_search('0 received')  # A default ping request on arista sends 5 pings, thus we verify that a least 1 ping of of 5 has been received
         success_msg: "Ping test failed as expected - No ping reply has been received"
         fail_msg: "Ping test successed, something wrong - please verify manually"
+
+################################################### STEP 4 - GENERATE THE IPSEC CONFIGURATION FOR BOTH SITES####################################################################################################################
+################################################### SPLIT THIS PART IN A DEDICATED TASK FILE ###################################################################################################################################
+################################################### ALSO, USE ENVIRONMENT VARIABLE OR ANSIBLE VARIABLES IN A SEPARATED FILE INSTEAD OF THE HARD-CODED FILE NAMES ###############################################################
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Import service parameters
+      include_vars:
+        file: /vagrant_data/DataModels/services.yaml
+        name: services_vars
+
+    - name: Import node specific parameters
+      include_vars:
+        file: /vagrant_data/DataModels/nodes.yaml
+        name: nodes_vars
+
+  # Site A
+    - name: Set the node specific parameters for site A
+      set_fact:
+        local_node_vars: "{{ nodes_vars.site_a }}"
+        remote_node_vars: "{{ nodes_vars.site_b }}"
+
+    - name: Create the configuration for the site A if is a managed site
+      set_fact:
+        site_a_configuration: "{{ lookup('template', '/vagrant_data/DataModels/ipsec_{{ nodes_vars.site_a.device_type }}.j2') }}"
+      when: services_vars.provider_managed.site_a
+
+  # Site B
+    - name: Set the node specific parameters for site B
+      set_fact:
+        local_node_vars: "{{ nodes_vars.site_b }}"
+        remote_node_vars: "{{ nodes_vars.site_a }}"
+
+    - name: Create the configuration for the site B if is a managed site
+      set_fact:
+        site_b_configuration: "{{ lookup('template', '/vagrant_data/DataModels/ipsec_{{ nodes_vars.site_b.device_type }}.j2') }}"
+      when: services_vars.provider_managed.site_b
+
+################################################### STEP 6 - PUSH THE IPSEC CONFIG TO THE VPN GATEWAYS WITH THE BASE CONFIG ###########
+################################################### TODO : TO CONSOLIDATE IN ONE SINGLE TASK ##########################################
+- name: Run commands on site_a_gateway and set the base IP config
+  hosts: clab-IPSEC-VPN-site_a_gateway
+  gather_facts: false
+
+  tasks:
+    - name: Import service parameters
+      include_vars:
+        file: /vagrant_data/DataModels/services.yaml
+        name: services_vars
+
+    - name: Import node specific parameters
+      include_vars:
+        file: /vagrant_data/DataModels/nodes.yaml
+        name: nodes_vars
+
+    - name: Set the node specific parameters for site A
+      set_fact:
+        local_node_vars: "{{ nodes_vars.site_a }}"
+        remote_node_vars: "{{ nodes_vars.site_b }}"
+
+    - name: render a Jinja2 template onto an Arista switch
+      arista.eos.eos_config:
+        backup: yes
+        src: /vagrant_data/DataModels/ipsec_{{ nodes_vars.site_a.device_type }}.j2
+
+- name: Run commands on site_b_gateway and set the base IP config
+  hosts: clab-IPSEC-VPN-site_b_gateway
+  gather_facts: false
+
+  tasks:
+    - name: render a Jinja2 template onto an Arista switch
+      arista.eos.eos_config:
+        backup: yes
+        src: /vagrant_data/DataModels/ipsec_{{ nodes_vars.site_b.device_type }}.j2
+
+################################################### STEP 6 - TEST CONNECTIVITY BETWEEN THE CLIENT ############################################################
+################################################### TODO - I WILL NOT TEST BECAUSE IPSEC IS NOT SUPPORTED BY ARISTA cEOS #####################################
