@@ -1,12 +1,12 @@
 ip security
   ike policy P1-{{services_vars.customer_name}}-{{services_vars.change_request}}
-    integrity {{services_vars.p1.integrity}} 
-    encryption {{services_vars.p1.encryption}} 
-    ike-lifetime {{services_vars.p1.renegociation_time}}
+    integrity {{services_vars.p1.integrity}}
+    encryption {{services_vars.p1.encryption}}
+    ike-lifetime {{services_vars.p1.renegociation_time // 3600}}
     dh-group {{services_vars.p1.dh_group}}
 !
   sa policy P2-{{services_vars.customer_name}}-{{services_vars.change_request}} 
-    sa lifetime {{services_vars.p2.renegociation_time}}
+    sa lifetime {{services_vars.p2.renegociation_time // 3600}}
     esp encryption {{services_vars.p2.encryption}} 
     esp integrity {{services_vars.p2.integrity}}
     pfs dh-group {{services_vars.p2.dh_group}}
@@ -23,7 +23,7 @@ vrf instance VRF-{{services_vars.customer_name}}
 !
 interface ethernet {{local_node_vars.interface_external}} 
   no switchport
-  ip address {{local_node_vars.ip}}
+  ip address {{local_node_vars.ip}}/{{local_node_vars.netmask}}
 !
 !
 interface tunnel {{local_node_vars.interface_tunnel}}

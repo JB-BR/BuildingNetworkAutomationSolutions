@@ -105,7 +105,7 @@
     - name: Verify that site_b_client is NOT reachable
       assert:
         that:
-          - ip_reachability_state.stdout[0] | regex_search('0 received')  # A default ping request on arista sends 5 pings, thus we verify that a least 1 ping of of 5 has been received
+          - ip_reachability_state.stdout[0] | regex_search('Network is unreachable')  # A default ping request on arista sends 5 pings, thus we verify that a least 1 ping of of 5 has been received
         success_msg: "Ping test failed as expected - No ping reply has been received"
         fail_msg: "Ping test successed, something wrong - please verify manually"
 
@@ -181,7 +181,7 @@
   tasks:
     - name: render a Jinja2 template onto an Arista switch
       arista.eos.eos_config:
-        backup: yes
+        backup: no
         src: /vagrant_data/DataModels/ipsec_{{ nodes_vars.site_b.device_type }}.j2
 
 ################################################### STEP 6 - TEST CONNECTIVITY BETWEEN THE CLIENT ############################################################

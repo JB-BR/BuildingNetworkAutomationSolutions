@@ -5,6 +5,7 @@ site_a:
   interface_tunnel: 73
   interface_external: 2
   ip: 100.64.1.1
+  netmask: 24
 
 site_b:
   device_type: aristaceos
@@ -12,3 +13,83 @@ site_b:
   interface_tunnel: 123
   interface_external: 2
   ip: 100.64.1.2
+  netmask: 24
+
+p1_rosetta:
+  encryption:
+    des:
+      junos: des-cbc
+      aristaceos:
+    3des:
+      junos: 3des-cbc
+      aristaceos: 3des
+    aes-128-cbc:
+      junos: aes-128-cbc
+      aristaceos: aes128
+    aes-128-gcm:
+      junos: aes-128-gcm
+      aristaceos:
+    aes-192-cbc:
+      junos: aes-192-cbc
+      aristaceos:
+    aes-256-cbc:
+      junos: aes-256-cbc
+      aristaceos: aes256
+    aes-256-gcm:
+      junos: aes-256-gcm
+      aristaceos:
+
+  integrity:
+    md5:
+      junos: md5
+      aristaceos: 
+    sha1:
+      junos: sha1
+      aristaceos: sha1
+    sha-256:
+      junos: sha-256
+      aristaceos: sha256
+    sha-384:
+      junos: sha-384
+      aristaceos: sha384
+    sha-512:
+      junos:
+      aristaceos: sha512
+
+p2_rosetta:
+  encryption:
+    des:
+      junos: des-cbc
+      aristaceos:
+    aes-128-cbc:
+      junos: aes-128-cbc
+      aristaceos: aes128
+    aes-128-gcm-128:
+      junos: aes-128-gcm
+      aristaceos: aes128gcm128
+    aes-128-gcm-64:
+      junos: 
+      aristaceos: aes128gcm64
+    aes-192-cbc:
+      junos: aes-192-cbc
+      aristaceos:
+    aes-192-gcm:
+      junos: aes-192-gcm
+      aristaceos:
+    aes-256:
+      junos: aes-256-cbc
+      aristaceos: aes256
+    aes-256-gcm-128: 
+      junos: aes-256-gcm
+      aristaceos: aes256gcm128
+
+  integrity:
+    md5:
+      junos: hmac-md5-96
+      aristaceos:
+    sha1:
+      junos: hmac-sha1-96
+      aristaceos: sha1
+    sha-256:
+      junos: hmac-sha-256-128
+      aristaceos: sha256
